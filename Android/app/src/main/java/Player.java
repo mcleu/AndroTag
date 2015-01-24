@@ -63,9 +63,7 @@ public class Player extends GeneralPlayer {
     public boolean fire() {
         if (inactive | isDead())
             return false;
-
         return getGun().fire();
-
     }
 	
 	

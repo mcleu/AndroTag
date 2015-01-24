@@ -6,6 +6,8 @@ import android.graphics.Color;
 
 import java.util.Arrays;
 
+import evans.dave.duinotag.R;
+
 
 public class Team {
 
@@ -18,9 +20,6 @@ public class Team {
 	public GeneralPlayer[] players;
 	private boolean[] slots;
 
-
-
-	
 	/** Constructor */
     public Team(){
         this(255,new Color(), "NO_TEAM");
@@ -43,15 +42,15 @@ public class Team {
 				return i;
 		return -1;
 	}
-	public boolean hasSlot(){
-		for (boolean slot : slots)
-			if (slot)
-				return true;
-		return false;
-	}
-	public boolean add(GeneralPlayer p){ 
+
+	public boolean add(GeneralPlayer p){
+        // Always can add to no team
+        if (this == Team.NO_TEAM)
+            return true;
+
 		int slot = getNextSlot();
-		if (slot < 0 ) return false;
+		if (slot < 0 )
+            return false;
 		
 		slots[slot] = true;
 		players[slot] = p;
@@ -59,8 +58,11 @@ public class Team {
         return true;
 	}
 	public boolean kick(GeneralPlayer p){
+        // Always allow leaving NO_TEAM
         if (this == NO_TEAM)
             return true;
+
+        // Add the player to the next available slot
 		for (int i = 0; i< players.length; i++){
 			if (players[i] == p) {
 				players[i] = null;
@@ -78,6 +80,12 @@ public class Team {
 				return true;
 		return false;
 	}
+    public String nameFromID(int id){
+        for (GeneralPlayer p : players)
+            if (p.id == id)
+                return p.user.name;
+        return "UNKNOWN_PLAYER";
+    }
 	
 	/** Team Stats */
 	public int getKills(){
@@ -100,8 +108,7 @@ public class Team {
 			stat += p.assists;
 		return stat;
 	}
-	
-	
+
 	public int getScore(){
 		int stat = 0;
 		for (GeneralPlayer p : players)

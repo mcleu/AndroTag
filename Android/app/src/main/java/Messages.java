@@ -24,6 +24,8 @@ public class Messages {
     final static byte NO_LIVES = 18;
     final static byte HITBY = 19;
     final static byte KILLEDBY = 20;
+    final static byte ADD_ENEMY = 21;
+    final static byte CLEAR_ENEMIES = 22;
     //TODO: Friendly fire mode
 
 }

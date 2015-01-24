@@ -40,8 +40,6 @@ public class GeneralPlayer {
 		respawnTime = 0;
 	}
 
-	
-	
 	/** API functions */
 	// Checks if a player is dead based on their respawn time
 	public boolean isDead() {
