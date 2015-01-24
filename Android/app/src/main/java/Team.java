@@ -12,20 +12,19 @@ import evans.dave.duinotag.R;
 public class Team {
 
     public int id;
-    public Color color;
+    public int color;
     public String name;
 
-    public static final Team NO_TEAM = new Team(255,new Color(), "NO TEAM");
+    public static final Team NO_TEAM = new Team(255,Color.BLACK, "NO TEAM");
 	
 	public GeneralPlayer[] players;
 	private boolean[] slots;
 
 	/** Constructor */
     public Team(){
-        this(255,new Color(), "NO_TEAM");
-
+        this(255,Color.BLACK, "NO_TEAM");
     }
-	public Team(int id, Color color, String name){
+	public Team(int id, int color, String name){
 		this.id = id;
 		this.color = color;
 		this.name = name;
