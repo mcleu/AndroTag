@@ -77,7 +77,18 @@ class AndroTag(serial.Serial):
         return self.readline()
 
 
+    def setTeam(self, team_id):
+        """ Set the team_id, [1, 256] """
+        if f >= 0 and f <= 255:
+            self._send(self.opCode['SET_TEAM'], team_id, self.fmtCode['ubyte'])
+
     def setPlayer(self, player_id):
-        """ Set the user, [1, 256] """
-        if f >= 1 and f <= 255:
+        """ Set the player_id, [1, 256] """
+        if f >= 0 and f <= 255:
             self._send(self.opCode['SET_PLAYER'], player_id, self.fmtCode['ubyte'])
+
+    def setGame(self, game_id):
+        """ Set the team_id, [1, 256] """
+        if f >= 0 and f <= 255:
+            self._send(self.opCode['SET_GAME'], game_id, self.fmtCode['ubyte'])
+
