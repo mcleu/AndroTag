@@ -4,6 +4,7 @@ import java.io.File;
  * Created by Dave on 19/01/2015.
  */
 public class Gun {
+
 	/** Gun descriptor variables */
 	/* NOTE: READ ONLY */
 	public String name;
@@ -49,6 +50,8 @@ public class Gun {
 		ammo = MAX_AMMO;
         return true;
 	}
+
+
 	
 	public Gun(String name, String desc, int id, File icon, int damage, int MAX_AMMO, int fireTime, int reloadTime, int fireMode){
 		this.name = name;
@@ -66,6 +69,10 @@ public class Gun {
 
     public Gun(String name, String desc, int id, int damage, int MAX_AMMO, int fireTime, int reloadTime, int fireMode){
         this(name, desc, id, new File("img/no_icon.png"), damage, MAX_AMMO, fireTime, reloadTime, fireMode);
+    }
+
+    public Gun(Gun g){
+        this(g.name, g.desc, g.id, g.icon, g.damage, g.MAX_AMMO, g.fireTime, g.reloadTime, g.fireMode);
     }
 
 

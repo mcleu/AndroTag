@@ -47,7 +47,7 @@ packet_recv			packet_id
 set_lives			value
 
 // These ones are more for debugging. Ideally they will be exclusively ARDUINO --> ANDROID
-set_respawn			time_ms_high	time_ms_low
+set_respawn			time_ms (long)
 set_shield			value
 set_active			gun_index
 try_reload			

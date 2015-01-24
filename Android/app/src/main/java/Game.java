@@ -1,5 +1,7 @@
 import android.graphics.Color;
 
+import java.util.concurrent.TimeUnit;
+
 public class Game{
     public int id;
 
@@ -40,7 +42,35 @@ public class Game{
         this.player = player;
     }
 
+    public String getTimeStr(){
+        long currentTime = System.currentTimeMillis();
+        if (currentTime < startTime){
+            long millis = startTime - currentTime;
+            return  String.format("-%d:%d",
+                    TimeUnit.MILLISECONDS.toMinutes(millis),
+                    TimeUnit.MILLISECONDS.toSeconds(millis) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+            );
+        } else if (currentTime < endTime)  {
+            long millis = endTime - currentTime;
+            return  String.format("%d:%d",
+                    TimeUnit.MILLISECONDS.toMinutes(millis),
+                    TimeUnit.MILLISECONDS.toSeconds(millis) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+            );
+        } else {
+            return "OVER";
+        }
+    }
 
+    public boolean isOver(){
+        if (System.currentTimeMillis() > endTime)
+            return true;
+        for (Team t : teams)
+            if (t.getScore()>=maxScore)
+                return true;
+        return false;
+    }
 
 
 }
