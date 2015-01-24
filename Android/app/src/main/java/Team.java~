@@ -1,0 +1,123 @@
+/**
+ * Created by Dave on 19/01/2015.
+ */
+
+/** -------------------  TEAM INFO --------------------------- */
+// More general team class without the players associated with the player list
+public class TeamInfo {
+	private int id;
+	private Color color;
+	private String name;
+	
+	/** Constructor */
+	public TeamInfo(){
+		id = 0;
+		color = new Color();
+		name = "";
+	}
+	public TeamInfo(int id, Color color, String name){
+		this.id = id;
+		this.color = color;
+		this.name = name;
+	}
+	public TeamInfo(TeamInfo team) { self(team.id, team.color, team.name); }
+} 
+
+/** -------------------  TEAM INFO --------------------------- */
+// More general team class without the players associated with the player list
+public class TeamFullException extends Exception {
+  public TeamFullException() { super(); }
+  public TeamFullException(String message) { super(message); }
+  public TeamFullException(String message, Throwable cause) { super(message, cause); }
+  public TeamFullException(Throwable cause) { super(cause); }
+}
+
+
+ 
+public class Team extends TeamInfo {
+	
+	public GeneralPlayer players[255];
+	private boolean slots[255];
+	
+	/** Constructor */
+	public Team(){
+		id = 0;
+		color = new Color();
+		name = "";
+		Arrays.fill(slots,false);
+		Arrays.fill(players,null);
+	}
+	public Team(int id, Color color, String name)
+		this.id = id;
+		this.color = color;
+		this.name = name;
+		Arrays.fill(slots,false);
+		Arrays.fill(players,null);
+	}
+	public Team(TeamInfo team) { self(team.id, team.color, team.name); }
+	
+	/** Adding/removing players from a team */
+	public int getNextSlot() {
+		for (int i = 0; i<slots.length; i++)
+			if (slots[i])
+				return i;
+		return -1;
+	}
+	public boolean hasSlot(){
+		for (slot : slots)
+			if (slot)
+				return true;
+		return false;
+	}
+	public boolean add(GeneralPlayer p){ 
+		int slot = getNextSlot;
+		if (slot < 0 ) return false;
+		
+		slots[slot] = true;
+		players[slot] = p;
+		p.setTeam(this);
+	}
+	public boolean kick(GeneralPlayer p){
+		for (int i = 0; i< players.length(); i++){
+			if (players[i] == p) {
+				players[i] = null;
+				slots[i] = false;
+				p.setTeam
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/** Team Stats */
+	public int getKills(){
+		int stat = 0;
+		for (p : players)
+			stat += p.getKills();
+		return stat;
+	}
+	
+	public int getDeaths(){
+		int stat = 0;
+		for (p : players)
+			stat += p.getDeaths();
+		return stat;
+	}
+	
+	public int getAssists(){
+		int stat = 0;
+		for (p : players)
+			stat += p.getAssists();
+		return stat;
+	}
+	
+	
+	public int getScore(){
+		int stat = 0;
+		for (p : players)
+			stat += p.getScore();
+		return stat;
+	}
+	
+
+}

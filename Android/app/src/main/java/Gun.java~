@@ -1,0 +1,63 @@
+/**
+ * Created by Dave on 19/01/2015.
+ */
+public class Gun {
+	/** Gun descriptor variables */
+	/* NOTE: READ ONLY */
+	public String name;
+	public String desc;
+	public File icon;
+	
+	public int id;
+	
+	public int damage; 
+	
+	public int ammo;
+	public int MAX_AMMO;
+	
+	public int fireTime;
+	public int reloadTime;
+	
+	public int fireMode; // 0, 1, 2
+	
+	// Gun current state variables
+	private long gunAvailable;
+	
+	public boolean fire(){
+		if (System.currentTimeMillis() < gunAvailable)
+			return false;
+		if (ammo <=0)
+			return false;
+		
+		ammo -= 1;
+		gunAvailable = System.currentTimeMillis()
+		if (ammo > 0 ) 
+			gunAvailable += fireTime;
+		
+		return true;
+	}
+	
+	public boolean reload(){
+		if (System.currentTimeMillis() < gunAvailable)
+			return false;
+		if (ammo == MAX_AMMO)
+			return false;
+		
+		gunAvailable = System.currentTimeMillis() + reloadTime;
+		ammo = MAX_AMMO;
+	}
+	
+	public Gun(String name, String desc, int id, File icon, int damage, int MAX_AMMO, int fireTime, int reloadTime){
+		this.name = name;
+		this.desc = desc;
+		this.id = id;
+		this.icon = icon;
+		this.damage = damage;
+		this.ammo = MAX_AMMO;
+		this.MAX_AMMO = MAX_AMMO;
+		this.fireTime = fireTime;
+		this.reloadTime = reloadTime;
+		this.gunAvailable = 0;
+	}
+
+}
