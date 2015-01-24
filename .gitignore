@@ -25,6 +25,9 @@ proguard/
 # Log Files
 *.log
 
-
 # Linux temp files
 *.*~
+
+# Python Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
