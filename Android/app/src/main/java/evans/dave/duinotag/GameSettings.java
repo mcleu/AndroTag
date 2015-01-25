@@ -30,7 +30,7 @@ public class GameSettings implements Parcelable {
                 25);
     }
     public GameSettings(int id){
-        this(id, 4, 10,
+        this(id, 2, 10,
                 System.currentTimeMillis(),
                 System.currentTimeMillis()+20*60*60*1000,
                 25);

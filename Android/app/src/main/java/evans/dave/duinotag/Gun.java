@@ -69,6 +69,10 @@ public class Gun {
         return true;
 	}
 
+    public String getStatsAsString(){
+        return String.format("%d-%d-%4f-%4f",damage,MAX_AMMO, 1000.0f/((float)fireTime), ((float) reloadTime )/1000.0 );
+    }
+
 
 	public Gun(String name, String desc, int id, int icon, int damage, int MAX_AMMO, int fireTime, int reloadTime, int fireMode){
 		this.name = name;
@@ -122,7 +126,7 @@ public class Gun {
     public static Gun getVaporizer() {
         return new Gun("Vaporizer",
                 "Aptly named, a heavy metal slug is magnetically accelerated to hypersonic speeds. " +
-                "The heavy slugs are slow to reload, but anyone hit by won't have time to consider that.",
+                "The heavy slugs are slow to reload, but anyone hit won't have time to consider that.",
                 02,         // Identifier
                 R.drawable.vaporizer,
                 45,         // Damage/shot

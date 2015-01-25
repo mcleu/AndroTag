@@ -35,16 +35,33 @@
             android:layout_alignBottom="@+id/availableText"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:id="@+id/underline1" />
+            android:id="@+id/underline1"
+            android:visibility="gone" />
 
-        <ScrollView
+        <FrameLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/availableScroll"
-            android:layout_below="@+id/underline1"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_weight="1" />
+            android:layout_height="0dp"
+            android:background="@drawable/outline"
+            android:layout_weight="1">
+
+            <ScrollView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/availableScroll"
+                android:layout_below="@+id/underline1"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_weight="1"
+                android:background="@color/dt_dark_gray"
+                android:layout_margin="5px">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/pickerLayout"></LinearLayout>
+            </ScrollView>
+        </FrameLayout>
 
         <TextView
             android:layout_width="fill_parent"

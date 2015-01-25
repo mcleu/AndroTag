@@ -1,6 +1,7 @@
 package evans.dave.duinotag;
 
 import android.app.ActionBar;
+import android.content.res.ColorStateList;
 import android.content.res.XmlResourceParser;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
@@ -19,8 +20,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import org.xmlpull.v1.XmlPullParser;
+
+import java.util.LinkedHashMap;
 
 
 public class LoadoutConfigActivity extends ActionBarActivity {
@@ -32,6 +36,7 @@ public class LoadoutConfigActivity extends ActionBarActivity {
     private int pid;
 
     private ScrollView availableScroll;
+    private LinearLayout pickerLayout;
     private LinearLayout loadoutLayout;
 
     private ImageButton[] loadoutButtons;
@@ -82,12 +87,13 @@ public class LoadoutConfigActivity extends ActionBarActivity {
 
         // Find the available gun scroll and loadout locations
         availableScroll = (ScrollView) findViewById(R.id.availableScroll);
+        pickerLayout = (LinearLayout) findViewById(R.id.pickerLayout);
         loadoutLayout = (LinearLayout) findViewById(R.id.loadoutLayout);
 
         // Set the loadout buttons
 
         loadoutButtons = new ImageButton[loadout.length];
-        imageOverlays = new ImageView[loadout.length];
+        //imageOverlays = new ImageView[loadout.length];
         for (int i = 0; i<loadout.length; i++) {
 
             // Make a linear layout for padding
@@ -97,22 +103,30 @@ public class LoadoutConfigActivity extends ActionBarActivity {
             linearParams.setMargins(7,7,7,7);
             linearParams.gravity = Gravity.CENTER;
             linearLayout.setLayoutParams( linearParams );
+            linearLayout.setGravity(Gravity.CENTER);
             loadoutLayout.addView(linearLayout);
 
             // Add a frame to hold the button and overlayed image
             FrameLayout frameLayout = new FrameLayout(this);
-            FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(
-                    210, 210);
+            LinearLayout.LayoutParams frameParams = new LinearLayout.LayoutParams(
+                    210,210);
             frameParams.setMargins(7,7,7,7);
-            frameLayout.setLayoutParams( linearParams );
+            frameParams.gravity = Gravity.CENTER;
+            frameLayout.setLayoutParams( frameParams );
             frameLayout.setBackgroundResource(R.color.dt_dark_gray);
             linearLayout.addView(frameLayout);
+
+            /*
+            FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(
+                    210, 210);
+            frameParams.setMargins(7,7,7,7);*/
 
             // Add the button to the thing
             loadoutButtons[i] = new ImageButton(this);
             FrameLayout.LayoutParams buttonParams = new FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.FILL_PARENT,FrameLayout.LayoutParams.FILL_PARENT);
-            loadoutButtons[i].setLayoutParams(frameParams);
+                    210, 210);
+            buttonParams.gravity = Gravity.CENTER;
+            loadoutButtons[i].setLayoutParams(buttonParams);
 
             frameLayout.addView(loadoutButtons[i]);
 
@@ -129,28 +143,69 @@ public class LoadoutConfigActivity extends ActionBarActivity {
 
         updateLoadout();
 
-        /*
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                210,210);
-        params.setMargins(10,10,10,10);
-        params.gravity= Gravity.CENTER;
 
-        loadoutButtons = new ImageButton[loadout.length];
-        for (int i = 0; i<loadout.length; i++) {
-            loadoutButtons[i] = new ImageButton(this);
+        // Set the gun picker up
+        for (int i = 0; i < game.availableGuns.length; i++){
+            // Set it up like thisL
+            //          NAME
+            // IMG      DESC
+            //          STATS
 
-            // Properly sets button style
-            loadoutButtons[i].setBackgroundResource(R.drawable.dt_button_2);
-            // Does shows up as a grey square
-            loadoutButtons[i].setImageResource(R.drawable.test);
+            Gun gun = Gun.getNewForID(game.availableGuns[i]);
 
-            loadoutButtons[i].setLayoutParams(params);
-            loadoutLayout.addView(loadoutButtons[i]);
-        } */
+            // Make a horizontal linearlayout
+            LinearLayout entry = new LinearLayout(this);
+            entry.setOrientation(LinearLayout.HORIZONTAL);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(10,10,10,10);
+            entry.setLayoutParams(params);
+            entry.setBackgroundResource(R.color.dt_slate_gray);
+            pickerLayout.addView(entry);
 
+            // Add the gun imagebutton
+            ImageButton gunimg = new ImageButton(this);
+            gunimg.setBackgroundResource(gun.icon);
+            LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(250,250);
+            imgParams.gravity = Gravity.CENTER_VERTICAL;
+            gunimg.setLayoutParams(imgParams);
 
-        //updateAvailable();
-        //updateLoadout();
+            final int GUN_ID = gun.id;
+            gunimg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    availableButtonClick(v, GUN_ID);
+                }
+            });
+
+            entry.addView(gunimg);
+
+            // Add the info
+            LinearLayout info = new LinearLayout(this);
+            info.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams infoParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+            infoParams.gravity = Gravity.CENTER_VERTICAL;
+            info.setLayoutParams(infoParams);
+            entry.addView(info);
+
+            TextView name = new TextView(this);
+            name.setText(gun.name);
+            name.setTextSize(25);
+            name.setTextColor(Color.WHITE);
+            info.addView(name);
+
+            TextView desc = new TextView(this);
+            desc.setText(gun.desc);
+            desc.setTextSize(16);
+            desc.setTextColor(Color.WHITE);
+            info.addView(desc);
+
+            TextView stats = new TextView(this);
+            stats.setText(gun.getStatsAsString());
+            stats.setTextSize(16);
+            stats.setTextColor(Color.WHITE);
+            info.addView(stats);
+        }
+
 
     }
 
@@ -169,12 +224,28 @@ public class LoadoutConfigActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void updateAvailable(){
-        //TODO: Function stub
-    }
-
     public void loadoutButtonClick(View v, int buttonID){
         loadout[buttonID] = 255;
+        updateLoadout();
+    }
+    public void availableButtonClick(View v, int gunID){
+
+        // Check if there is a free space, and the gun isn't already in the loadout
+        int availableSlot = -1;
+        for (int i= 0; i < loadout.length; i++){
+            if (loadout[i] == 255 && availableSlot == -1)
+                availableSlot = i;
+
+            if (loadout[i] == gunID){
+                availableSlot = -1;
+                break;
+            }
+        }
+
+        if (availableSlot == -1)
+            return;
+
+        loadout[availableSlot] = gunID;
         updateLoadout();
     }
 
