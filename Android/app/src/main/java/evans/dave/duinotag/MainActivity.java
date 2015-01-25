@@ -3,7 +3,6 @@ package evans.dave.duinotag;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -31,6 +30,14 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    /** Start Join Game */
+    public void startJoin(View view){
+        // Start main game screen
+        Intent intent = new Intent(this,JoinGameActivity.class);
+        startActivity(intent);
+    }
+
     /** Start testing mode */
     public void startTest(View view){
         // Start main game screen
@@ -38,6 +45,12 @@ public class MainActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
+
+    public void startTest2(View view){
+        // Start main game screen
+        Intent intent = new Intent(this,TestActivity.class);
+        startActivity(intent);
+    }
 
     /** Start testing mode */
     public void startAccount(View view){

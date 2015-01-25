@@ -2,38 +2,23 @@ package evans.dave.duinotag;
 
 import android.graphics.Color;
 
-import java.util.concurrent.TimeUnit;
-
-public class Game{
-    public int id;
-
-    public int loadoutSize;
-    public Gun[] availableGuns = {
-            Gun.getLancer(),
-            Gun.getRepeater(),
-            Gun.getVaporizer(),
-            Gun.getBoomstick()};
-
-    public int lives;
-    public long startTime;
-    public long endTime;
+public class Game extends GameSettings{
     public Team[] teams;
-
-    public int maxScore;
-
-    public Player player;
 
     /** Constructor */
     public Game(){
-        this(0, 2, 10,
+        this(0, 4, 10,
                 System.currentTimeMillis(),
                 System.currentTimeMillis()+20*60*60*1000,
-                new Team[] {new Team(0,Color.RED,"Red evans.dave.duinotag.Team"),new Team(1,Color.BLUE,"Blue evans.dave.duinotag.Team")},
-                25,
-                new Player(new User("UNKNOWN_PLAYER",0), Team.NO_TEAM));
+                new Team[] {new Team(0,Color.RED,"Red Team"),new Team(1,Color.BLUE,"Blue Team")},
+                25);
+    }
+    public Game(GameSettings g, Team[] teams){
+        this(g.id, g.loadoutSize, g.lives,g.startTime, g.endTime,
+               teams, g.maxScore);
     }
     public Game(int id, int loadoutSize, int lives, long startTime, long endTime,
-                Team[] teams, int maxScore, Player player){
+                Team[] teams, int maxScore){
         this.id = id;
         this.loadoutSize = loadoutSize;
         this.lives = lives;
@@ -41,28 +26,6 @@ public class Game{
         this.endTime = endTime;
         this.teams = teams;
         this.maxScore = maxScore;
-        this.player = player;
-    }
-
-    public String getTimeStr(){
-        long currentTime = System.currentTimeMillis();
-        if (currentTime < startTime){
-            long millis = startTime - currentTime;
-            return  String.format("-%d:%d",
-                    TimeUnit.MILLISECONDS.toMinutes(millis),
-                    TimeUnit.MILLISECONDS.toSeconds(millis) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
-            );
-        } else if (currentTime < endTime)  {
-            long millis = endTime - currentTime;
-            return  String.format("%d:%d",
-                    TimeUnit.MILLISECONDS.toMinutes(millis),
-                    TimeUnit.MILLISECONDS.toSeconds(millis) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
-            );
-        } else {
-            return "OVER";
-        }
     }
 
     public boolean isOver(){

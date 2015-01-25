@@ -36,6 +36,14 @@
             android:name=".JoinGameActivity"
             android:label="@string/title_activity_join_game" >
         </activity>
+        <activity
+            android:name=".LoadoutConfigActivity"
+            android:label="@string/title_activity_loadout_config" >
+        </activity>
+        <activity
+            android:name=".TestActivity"
+            android:label="@string/title_activity_test" >
+        </activity>
     </application>
 
 </manifest>

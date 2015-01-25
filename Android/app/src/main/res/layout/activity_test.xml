@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="#ffb46760"
+            android:gravity="center">
+
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="#ff535353"
+                android:layout_margin="3dp">
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/imageView5"
+                    android:src="@drawable/no_gun" />
+
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="Button 1"
+                    android:id="@+id/button3"
+                    style="@style/dt_button_2" />
+
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="#ffb4b4b4"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="#ff535353"
+                android:layout_margin="3dp">
+
+                <Button
+                    style="@style/dt_button_2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="New Button"
+                    android:id="@+id/button4"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/imageView6"
+                    android:src="@drawable/no_gun"
+                    android:scaleType="fitXY" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="#ffb4b4b4"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <RelativeLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="#ff535353"
+                android:layout_margin="3dp">
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/imageView7"
+                    android:src="@drawable/no_gun"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="0dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="0dp"
+                    android:layout_centerInParent="true"
+                    android:scaleType="fitXY" />
+
+                <Button
+                    style="@style/dt_button_2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="Button 3"
+                    android:id="@+id/button5"
+                    android:layout_alignParentLeft="false"
+                    android:layout_marginLeft="0dp"
+                    android:layout_alignParentTop="false"
+                    android:layout_marginTop="0dp"
+                    android:layout_centerInParent="true" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

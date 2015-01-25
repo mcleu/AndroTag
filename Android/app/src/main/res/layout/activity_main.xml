@@ -13,7 +13,8 @@
         android:text="@string/button_join"
         android:textSize="24dp"
         style="@style/dt_button"
-        android:layout_margin="10dp" />
+        android:layout_margin="10dp"
+        android:onClick="startJoin" />
 
     <Button
         android:layout_weight="1"
@@ -22,7 +23,8 @@
         android:text="@string/button_create"
         android:textSize="24dp"
         style="@style/dt_button"
-        android:layout_margin="10dp" />
+        android:layout_margin="10dp"
+        android:onClick="startTest2" />
 
     <Button
         android:layout_weight="1"

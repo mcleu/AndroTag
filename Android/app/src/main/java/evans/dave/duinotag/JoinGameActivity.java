@@ -1,25 +1,23 @@
 package evans.dave.duinotag;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 
 
 public class JoinGameActivity extends ActionBarActivity {
+
+    private static final String TAG = "JoinGameActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_game);
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_join_game, menu);
-        return true;
     }
 
     @Override
@@ -36,4 +34,26 @@ public class JoinGameActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public int parseIntFromID(int id, int radix){
+        EditText edit = (EditText) findViewById(id);
+        //Log.v(TAG, "Parsing: " + edit.getText().toString());
+        return Integer.parseInt(edit.getText().toString(),radix);
+    }
+    public void startLoadout(View view){
+
+        //For now, we will send the game ID, Team ID, and player ID
+        // Eventually this will happen at the next screen, automatically
+
+        Intent intent = new Intent(this,LoadoutConfigActivity.class);
+        int gid = parseIntFromID(R.id.gidEdit,16);
+        int tid = parseIntFromID(R.id.tidEdit,16);
+        int pid = parseIntFromID(R.id.pidEdit, 16);
+        intent.putExtra("GID",(int) gid);
+        intent.putExtra("TID",(int) tid);
+        intent.putExtra("PID",(int) pid);
+        startActivity(intent);
+
+    }
+
 }

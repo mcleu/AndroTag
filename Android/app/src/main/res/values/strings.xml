@@ -20,5 +20,7 @@
     <string name="saved_id">preference_saved_id</string>
     <string name="saved_id_default">0</string>
     <string name="title_activity_join_game">JoinGameActivity</string>
+    <string name="title_activity_loadout_config">LoadoutConfigActivity</string>
+    <string name="title_activity_test">testActivity</string>
 
 </resources>

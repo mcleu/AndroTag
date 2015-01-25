@@ -11,7 +11,7 @@ public class Gun {
 	/* NOTE: READ ONLY */
 	public String name;
 	public String desc;
-	public File icon;
+	public int icon;
 	
 	public int id;
 	
@@ -25,8 +25,24 @@ public class Gun {
 	
 	public int fireMode; // 0, 1, 2
 	
-	// evans.dave.duinotag.Gun current state variables
+	// Gun current state variables
 	private long gunAvailable;
+
+    public static final Gun NO_GUN = new Gun("","",255,R.drawable.no_gun,0,0,0,0,0);
+
+    /** Constructors */
+    private static final Gun[] allGuns = {
+            Gun.getLancer(),
+            Gun.getRepeater(),
+            Gun.getVaporizer(),
+            Gun.getBoomstick()};
+
+    public static final Gun getNewForID(int id){
+        for (Gun g : allGuns)
+            if (g.id == id)
+                return new Gun(g);
+        return new Gun(Gun.NO_GUN);
+    }
 	
 	public boolean fire(){
 		if (System.currentTimeMillis() < gunAvailable)
@@ -54,7 +70,7 @@ public class Gun {
 	}
 
 
-	public Gun(String name, String desc, int id, File icon, int damage, int MAX_AMMO, int fireTime, int reloadTime, int fireMode){
+	public Gun(String name, String desc, int id, int icon, int damage, int MAX_AMMO, int fireTime, int reloadTime, int fireMode){
 		this.name = name;
 		this.desc = desc;
 		this.id = id;
@@ -69,7 +85,7 @@ public class Gun {
 	}
 
     public Gun(String name, String desc, int id, int damage, int MAX_AMMO, int fireTime, int reloadTime, int fireMode){
-        this(name, desc, id, new File("img/no_icon.png"), damage, MAX_AMMO, fireTime, reloadTime, fireMode);
+        this(name, desc, id, R.drawable.no_gun, damage, MAX_AMMO, fireTime, reloadTime, fireMode);
     }
 
     public Gun(Gun g){
@@ -82,6 +98,7 @@ public class Gun {
                 "Induction coils prevent excess EM emission to give this rifle moderate damage while " +
                 "keeping power usage to a reasonable level.",
                 00,         // Identifier
+                R.drawable.lancer,
                 20,         // Damage/shot
                 12,         // Shots/clip
                 500,        // time(ms)/shot
@@ -94,6 +111,7 @@ public class Gun {
                 "A modified Lancer with larger induction coils passed back into the generation chamber, "+
                 "giving this weapon a significantly higher rate of fire at a much lower impact",
                 01,         // Identifier
+                R.drawable.repeater,
                 7,          // Damage/shot
                 99,         // Shots/clip
                 50,         // time(ms)/shot
@@ -106,6 +124,7 @@ public class Gun {
                 "Aptly named, a heavy metal slug is magnetically accelerated to hypersonic speeds. " +
                 "The heavy slugs are slow to reload, but anyone hit by won't have time to consider that.",
                 02,         // Identifier
+                R.drawable.vaporizer,
                 45,         // Damage/shot
                 4,          // Shots/clip
                 750,        // time(ms)/shot
@@ -118,6 +137,7 @@ public class Gun {
                 "The acoustic amplifier in this weapon isn't strong enough to hit anything at a distance," +
                 " but once close... big boom, big fun.",
                 03,         // Identifier
+                R.drawable.burster,
                 60,         // Damage/shot
                 6,          // Shots/clip
                 500,        // time(ms)/shot

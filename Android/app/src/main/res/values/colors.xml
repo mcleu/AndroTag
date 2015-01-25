@@ -3,6 +3,7 @@
 
     <color name="dt_neon_blue">#ff4fa5d5</color>
     <color name="dt_ammo_color">#FFFF626D</color>
+    <color name="dt_dark_gray">#ff171717</color>
     <color name="dt_slate_gray">#ff373737</color>
     <color name="dt_light_gray">#ffb5b6b3</color>
     <color name="dt_orange">#ffDF7401</color>
