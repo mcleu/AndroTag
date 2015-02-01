@@ -1,0 +1,128 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="100dp"
+    android:minHeight="400px"
+    android:orientation="vertical"
+    android:padding="6dip"
+    android:background="@drawable/dt_gunbutton">
+
+
+    <!--SeekBar
+        android:layout_width="200px"
+        android:progressDrawable="@drawable/statbar"
+        android:thumb="@drawable/statbar_thumb"
+        android:layout_height="wrap_content"
+        android:id="@+id/statA"
+        android:layout_alignTop="@+id/label"
+        android:layout_alignRight="@+id/label"
+        android:layout_alignEnd="@+id/label"
+        android:indeterminate="false"
+        android:splitTrack="false"
+        android:clickable="false"
+        android:longClickable="false"
+        android:focusable="false"
+        /-->
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="6dip"
+            android:src="@drawable/ic_launcher" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:id="@+id/label"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Lander"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                android:clickable="false"
+                android:ellipsize="end"
+                android:singleLine="true"/>
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="Description. Thius will be rather long to test the padding of the display. Some may say it's unnecessaru"
+                android:textSize="12sp"
+                android:textColor="#FFFFFF"
+                android:ellipsize="end"
+                android:lines="3"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <ProgressBar android:id="@+id/statD"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:progressDrawable="@drawable/statbar_damage"
+            android:layout_alignTop="@+id/label"
+            android:layout_alignRight="@+id/label"
+            android:layout_alignEnd="@+id/label"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:id="@+id/statF"
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:progressDrawable="@drawable/statbar_rate"
+            android:layout_alignTop="@+id/label"
+            android:layout_alignRight="@+id/label"
+            android:layout_alignEnd="@+id/label"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:id="@+id/statA"
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:progressDrawable="@drawable/statbar_ammo"
+            android:layout_alignTop="@+id/label"
+            android:layout_alignRight="@+id/label"
+            android:layout_alignEnd="@+id/label"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:id="@+id/statR"
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:progressDrawable="@drawable/statbar_reload"
+            android:layout_alignTop="@+id/label"
+            android:layout_alignRight="@+id/label"
+            android:layout_alignEnd="@+id/label"
+            android:focusableInTouchMode="false"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" />
+    </LinearLayout>
+
+</LinearLayout>
