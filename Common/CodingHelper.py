@@ -27,8 +27,8 @@ ArdVars = ['my_life',
           'my_respawn',
           'my_shield',
           'my_active',
-          '',
-          '',
+          'gunReload',
+          'gunFire',
           'my_num_guns',
           'my_team',
           'my_color',
@@ -39,6 +39,10 @@ ArdVars = ['my_life',
           'my_disabled',
           '',
           'my_properties',
+          '',
+          '',
+          '',
+          '',
           '',
           '',
           '',
@@ -60,7 +64,10 @@ for OpCode in OpCodes:
     print "//", OpCode[0], OpCode[1]
     print "case", OpCode[0]+":"
     if (OpCode[2]==0):
-        print "  #TODO", OpCode[0]
+        if (ArdVars[OpCode[1]]==''):
+            print "  // #TODO", OpCode[0]
+        else:
+            print "  " + ArdVars[OpCode[1]] + "();"
 
     if (OpCode[2]!=0):
         print "  // Error check for correct number of bytes"
@@ -75,7 +82,7 @@ for OpCode in OpCodes:
             print "    // Error check for valid value (min, max)"
             print "    if(dataVal >= 1 && dataVal <= 4294967295){"
 
-        print "      #TODO UPDATE  = dataVal;"
+        print "      " + ArdVars[OpCode[1]] + " = dataVal;"
         print "      Serial.write("+ OpCode[0] +"); // write returns received OpCode"
         print "    }"
         print "    else{ // outside allowed range"
@@ -88,5 +95,6 @@ for OpCode in OpCodes:
         if (OpCode[2]== 4):
             print "  else{ // Serial.available != 4"
             print '    Serial.println("Serial Data Error: '+ OpCode[0] +' expecting long (4 bytes).");'
-    print "}"
+        print "}"
     print "break;"
+    print ""
