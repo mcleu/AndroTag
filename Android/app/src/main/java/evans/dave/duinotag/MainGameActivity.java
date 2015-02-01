@@ -1,9 +1,10 @@
 package evans.dave.duinotag;
 
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,7 +39,13 @@ public class MainGameActivity extends ActionBarActivity {
    	TextView loadoutAmmos[];
    	FrameLayout loadoutFrames[];
 
+    /* Sound management */
     MediaPlayer gunAudioPlayer;
+    SoundPool soundPool;
+    int[] gunSoundIds = new int[4];
+    int reloadSoundId;
+    int clickSoundId;
+
     ShieldAudioPlayer shieldAudioPlayer = new ShieldAudioPlayer();
 
     @Override
@@ -71,6 +78,14 @@ public class MainGameActivity extends ActionBarActivity {
         player.loadout = app.game.getNewLoadout(app.loadout);
 
         app.game.addPlayerToTeam(player, tid);
+
+        // Load sounds
+        soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC,0);
+        for (int i= 0;  i<player.loadout.length; i++){
+            gunSoundIds[i] = soundPool.load(this, player.loadout[i].firingSound, 1);
+        }
+        reloadSoundId = soundPool.load(this, R.raw.gun_reload, 1);
+        clickSoundId = soundPool.load(this, R.raw.gun_click, 1);
 
 		// Get various layout items
 		infoText 	= (TextView) findViewById(R.id.textView);
@@ -224,7 +239,8 @@ public class MainGameActivity extends ActionBarActivity {
     	updateSimpleUI();
     }
     public void clickAmmo(View v){
-    	player.reload();
+    	if (player.reload())
+            soundPool.play(reloadSoundId,1,1,1,0,1);//playGunAudio(R.raw.gun_reload);
     }
 
     Runnable updateStatusChecker = new Runnable(){
@@ -239,9 +255,14 @@ public class MainGameActivity extends ActionBarActivity {
 
     public void loadoutButtonClick(View v, int buttonID) {
         if (player.loadout[buttonID] == player.getGun()) {
-            if (player.fire())
+            if (player.fire()) {
                 if (player.getGun().firingSound != 0)
-                    playGunAudio(player.getGun().firingSound);
+                    soundPool.play(gunSoundIds[player.activeGun],1,1,1,0,1);//playGunAudio(player.getGun().firingSound);
+            } else {
+                soundPool.play(clickSoundId,1,1,1,0,1);
+                //playGunAudio(R.raw.gun_click);
+            }
+
 
         } else {
             player.swap();
@@ -271,8 +292,16 @@ public class MainGameActivity extends ActionBarActivity {
             gunAudioPlayer.reset();
             gunAudioPlayer.release();
         }
+        Log.v("GunAudio","Playing "+res);
         gunAudioPlayer = MediaPlayer.create(this, res);
-        gunAudioPlayer.start();
+        gunAudioPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                if (mp == gunAudioPlayer) {
+                    gunAudioPlayer.start();
+                }
+            }
+        });
     }
 
     private class ShieldAudioPlayer{

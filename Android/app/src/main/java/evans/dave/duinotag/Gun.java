@@ -132,7 +132,7 @@ public class Gun {
                 50,         // time(ms)/shot
                 1000,       // time(ms) for reload
                 0,
-                R.raw.lancer_fire);         // Firing mode (0 is normal, 1 is burst)
+                R.raw.repeater_fire);         // Firing mode (0 is normal, 1 is burst)
     }
 
     public static Gun getVaporizer() {
@@ -146,7 +146,7 @@ public class Gun {
                 750,        // time(ms)/shot
                 2000,       // time(ms) for reload
                 0,
-                R.raw.lancer_fire);         // Firing mode (0 is normal, 1 is burst)
+                R.raw.vaporizer_fire);         // Firing mode (0 is normal, 1 is burst)
     }
 
     public static Gun getBoomstick(){
@@ -187,7 +187,7 @@ public class Gun {
                 100,        // time(ms)/shot
                 2100,       // time(ms) for reload
                 1,
-                R.raw.lancer_fire);         // Firing mode (0 is normal, 1 is burst)
+                R.raw.delta_fire);         // Firing mode (0 is normal, 1 is burst)
     }
 
 }

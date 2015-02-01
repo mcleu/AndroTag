@@ -60,8 +60,8 @@ public class Player extends GeneralPlayer {
         activeGun = (activeGun+1)%loadout.length;
 	}
 	
-	public void reload() {
-        getGun().reload();
+	public boolean reload() {
+        return getGun().reload();
 	}
 
 	public void reloadAll() {
