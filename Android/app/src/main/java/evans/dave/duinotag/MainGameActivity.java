@@ -1,15 +1,13 @@
 package evans.dave.duinotag;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
@@ -34,10 +32,14 @@ public class MainGameActivity extends ActionBarActivity {
     TextView timeText;
    	ProgressBar shieldBar;
    	ProgressBar ammoBar;
+    TextView ammoText;
    	
    	ImageButton loadoutButtons[];
    	TextView loadoutAmmos[];
    	FrameLayout loadoutFrames[];
+
+    MediaPlayer gunAudioPlayer;
+    ShieldAudioPlayer shieldAudioPlayer = new ShieldAudioPlayer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,16 +72,16 @@ public class MainGameActivity extends ActionBarActivity {
 
         app.game.addPlayerToTeam(player, tid);
 
-
 		// Get various layout items
 		infoText 	= (TextView) findViewById(R.id.textView);
 		timeText 	= (TextView) findViewById(R.id.textView2);
 		shieldText 	= (TextView) findViewById(R.id.textView4);
 		livesText 	= (TextView) findViewById(R.id.textView3);
+        ammoText    = (TextView) findViewById(R.id.textView6);
 		
 		shieldBar 	= (ProgressBar) findViewById(R.id.progressBar);
 		ammoBar 	= (ProgressBar) findViewById(R.id.progressBar2);
-		
+
 		// Layout Guns
         LinearLayout loadoutLayout = (LinearLayout) findViewById(R.id.loadoutLayout);
         loadoutFrames=  new FrameLayout[app.loadout.length];
@@ -134,8 +136,10 @@ public class MainGameActivity extends ActionBarActivity {
 		updateSimpleUI();
         updateLoadout();
 
-        // Start cts updates
+        // Start cts UI updates
         startRepeatingUpdate();
+
+
 		
     }
 
@@ -149,14 +153,27 @@ public class MainGameActivity extends ActionBarActivity {
         timeText.setText(app.game.getTimeStr());
     }
     public void updateShield(){
+        int oldShield = player.getShield();
         player.update();
+        int newShield = player.getShield();
         shieldText.setText(String.format("%2d",player.getShield()));
         shieldBar.setProgress(player.getShield());
+
+        // TODO: get this code working
+        /*
+        if (newShield == 100)
+            shieldAudioPlayer.setState(0); //off
+        else if (newShield > oldShield)
+            shieldAudioPlayer.setState(2); //regenerating
+        else
+            shieldAudioPlayer.setState(1); //beeping */
+
     }
     public void updateAmmo(){
         player.update();
         ammoBar.setMax(player.getGun().MAX_AMMO);
         ammoBar.setProgress(player.getGun().ammo);
+        ammoText.setText(player.getGun().ammo + "/" + player.getGun().MAX_AMMO);
     }
 
     public void updateLives(){
@@ -207,8 +224,7 @@ public class MainGameActivity extends ActionBarActivity {
     	updateSimpleUI();
     }
     public void clickAmmo(View v){
-    	// Just update the UI here for now
-    	updateSimpleUI();
+    	player.reload();
     }
 
     Runnable updateStatusChecker = new Runnable(){
@@ -216,13 +232,16 @@ public class MainGameActivity extends ActionBarActivity {
         public void run(){
                 updateGameTime();
                 updateShield();
+                updateAmmo();
                 updateHandler.postDelayed(updateStatusChecker, ui_update_interval);
             }
     };
 
     public void loadoutButtonClick(View v, int buttonID) {
         if (player.loadout[buttonID] == player.getGun()) {
-            player.fire();
+            if (player.fire())
+                if (player.getGun().firingSound != 0)
+                    playGunAudio(player.getGun().firingSound);
 
         } else {
             player.swap();
@@ -246,4 +265,66 @@ public class MainGameActivity extends ActionBarActivity {
 
     void startRepeatingUpdate(){updateStatusChecker.run();}
     void stopRepeatingUpdate() {updateHandler.removeCallbacks(updateStatusChecker);}
+
+    protected void playGunAudio(int res){
+        if (gunAudioPlayer != null){
+            gunAudioPlayer.reset();
+            gunAudioPlayer.release();
+        }
+        gunAudioPlayer = MediaPlayer.create(this, res);
+        gunAudioPlayer.start();
+    }
+
+    private class ShieldAudioPlayer{
+
+        private int status;
+        private MediaPlayer mp;
+
+        public ShieldAudioPlayer(){
+            status = 0;
+        }
+        public void setState(int state) {
+            Log.v("ShieldAudioPlayer","State "+ state + " - " + status + "(" + (mp!=null) + ")");
+            if (state == 0){
+                // OFF
+                if (status != 0 && mp !=null) {
+                    mp.reset();
+                    mp.release();
+                }
+                status = 0;
+                return;
+
+            } else if (state == 1) {
+                // BEEPING
+                if (status != 1 && mp != null) {
+                    mp.reset();
+                    mp.release();
+                }
+                if (status != 1) {
+                    Log.v("ShieldAudioPlayer","IF1 "+ state + " - " + status + "(" + (mp!=null) + ")");
+                    mp = MediaPlayer.create(MainGameActivity.this,R.raw.shield_beep);
+                    Log.v("ShieldAudioPlayer","IF2 "+ state + " - " + status + "(" + (mp!=null) + ")");
+                    mp.start();
+                    mp.setLooping(true);
+                }
+                status = 1;
+                return;
+
+            } else if (state == 2) {
+                // REGENERATING
+                if (status == 1 && mp != null){
+                    mp.reset();
+                    mp.release();
+                    mp = MediaPlayer.create(MainGameActivity.this, R.raw.shield_regen);
+                    mp.start();
+                    status = 2;
+                }
+            }
+
+        }
+
+    }
+
+
+
 }

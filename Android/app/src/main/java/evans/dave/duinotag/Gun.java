@@ -1,7 +1,5 @@
 package evans.dave.duinotag;
 
-import java.io.File;
-
 /**
  * Created by Dave on 19/01/2015.
  */
@@ -11,7 +9,9 @@ public class Gun {
 	/* NOTE: READ ONLY */
 	public String name;
 	public String desc;
+
 	public int icon;
+    public int firingSound;
 	
 	public int id;
 	
@@ -28,14 +28,16 @@ public class Gun {
 	// Gun current state variables
 	private long gunAvailable;
 
-    public static final Gun NO_GUN = new Gun("","",255,R.drawable.no_gun,0,0,0,0,0);
+    public static final Gun NO_GUN = new Gun("","",255,R.drawable.no_gun,0,0,0,0,0,0);
 
     /** Constructors */
     private static final Gun[] allGuns = {
             Gun.getLancer(),
             Gun.getRepeater(),
             Gun.getVaporizer(),
-            Gun.getBoomstick()};
+            Gun.getBoomstick(),
+            Gun.getPhaser(),
+            Gun.getDelta()};
 
     public static final Gun getNewForID(int id){
         for (Gun g : allGuns)
@@ -54,7 +56,7 @@ public class Gun {
 		gunAvailable = System.currentTimeMillis();
 		if (ammo > 0 ) 
 			gunAvailable += fireTime;
-		
+
 		return true;
 	}
 	
@@ -80,7 +82,8 @@ public class Gun {
     }
 
 
-	public Gun(String name, String desc, int id, int icon, int damage, int MAX_AMMO, int fireTime, int reloadTime, int fireMode){
+	public Gun(String name, String desc, int id, int icon, int damage, int MAX_AMMO,
+               int fireTime, int reloadTime, int fireMode, int firingSound){
 		this.name = name;
 		this.desc = desc;
 		this.id = id;
@@ -92,14 +95,15 @@ public class Gun {
 		this.reloadTime = reloadTime;
 		this.gunAvailable = 0;
         this.fireMode = fireMode;
+        this.firingSound = firingSound;
 	}
 
     public Gun(String name, String desc, int id, int damage, int MAX_AMMO, int fireTime, int reloadTime, int fireMode){
-        this(name, desc, id, R.drawable.no_gun, damage, MAX_AMMO, fireTime, reloadTime, fireMode);
+        this(name, desc, id, R.drawable.no_gun, damage, MAX_AMMO, fireTime, reloadTime, fireMode,0);
     }
 
     public Gun(Gun g){
-        this(g.name, g.desc, g.id, g.icon, g.damage, g.MAX_AMMO, g.fireTime, g.reloadTime, g.fireMode);
+        this(g.name, g.desc, g.id, g.icon, g.damage, g.MAX_AMMO, g.fireTime, g.reloadTime, g.fireMode, g.firingSound);
     }
 
 
@@ -113,7 +117,8 @@ public class Gun {
                 12,         // Shots/clip
                 500,        // time(ms)/shot
                 1000,       // time(ms) for reload
-                0);         // Firing mode (0 is normal, 1 is burst)
+                0,
+                R.raw.lancer_fire);         // Firing mode (0 is normal, 1 is burst)
     }
 
     public static Gun getRepeater(){
@@ -123,10 +128,11 @@ public class Gun {
                 01,         // Identifier
                 R.drawable.repeater_small,
                 7,          // Damage/shot
-                99,         // Shots/clip
+                100,         // Shots/clip
                 50,         // time(ms)/shot
                 1000,       // time(ms) for reload
-                0);         // Firing mode (0 is normal, 1 is burst)
+                0,
+                R.raw.lancer_fire);         // Firing mode (0 is normal, 1 is burst)
     }
 
     public static Gun getVaporizer() {
@@ -139,7 +145,8 @@ public class Gun {
                 4,          // Shots/clip
                 750,        // time(ms)/shot
                 2000,       // time(ms) for reload
-                0);         // Firing mode (0 is normal, 1 is burst)
+                0,
+                R.raw.lancer_fire);         // Firing mode (0 is normal, 1 is burst)
     }
 
     public static Gun getBoomstick(){
@@ -152,7 +159,35 @@ public class Gun {
                 6,          // Shots/clip
                 500,        // time(ms)/shot
                 2000,       // time(ms) for reload
-                1);         // Firing mode (0 is normal, 1 is burst)
+                1,
+                R.raw.lancer_fire);         // Firing mode (0 is normal, 1 is burst)
+    }
+
+    public static Gun getPhaser(){
+        return new Gun("Phaser",
+                "A small power cell is enough to keep this low powered blaster charged a long time. "+
+                "Remember to turn off 'stun'.",
+                04,
+                R.drawable.phaser,
+                10,
+                100,
+                300,
+                1000,
+                0,
+                R.raw.lancer_fire);
+    }
+
+    public static Gun getDelta(){
+        return new Gun("Delta",
+                "A heavy hitting pulse rifle using belt fed power cells to keep it hitting hard",
+                05,         // Identifier
+                R.drawable.delta,
+                12,         // Damage/shot
+                40,         // Shots/clip
+                100,        // time(ms)/shot
+                2100,       // time(ms) for reload
+                1,
+                R.raw.lancer_fire);         // Firing mode (0 is normal, 1 is burst)
     }
 
 }

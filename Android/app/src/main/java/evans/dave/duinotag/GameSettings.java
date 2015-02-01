@@ -13,7 +13,7 @@ public class GameSettings implements Parcelable {
     public int id;
 
     public int loadoutSize;
-    public int[] availableGuns = {0,1,2,3};
+    public int[] availableGuns = {0,1,2,3,4,5};
 
     public int lives;
     public long startTime;

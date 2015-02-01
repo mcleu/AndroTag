@@ -56,8 +56,9 @@ public class GunOptionAdapter extends ArrayAdapter<String> {
 
 
         // Damage
-        statD.setMax(100); // goes for D=0 to 100 logarithmically
-        statD.setProgress((int) (22*Math.log(gun.damage)));
+        statD.setMax(100);
+        double dd = gun.damage; // Linear scaling
+        statD.setProgress((int) dd);
 
         // Ammo
         statA.setMax(100); // goes for A=0 to 150 logarithmically
