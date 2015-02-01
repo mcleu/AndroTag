@@ -66,6 +66,7 @@ byte my_game = 0;
 unsigned long my_starttime;
 unsigned long my_endtime;  
 boolean my_disabled = 1;
+byte my_properties;
 
 volatile long gun_firetime = 300;
 volatile long gun_reloadtime = 5000;

@@ -14,7 +14,7 @@ void readSerial()  {
     
   switch (opCode) {
       
-    //Adjust DDS tuning word
+    // SET_LIVES 0
     case SET_LIVES:
       // do some error check for correct number of bytes
       if (Serial.available() == 1){
@@ -26,17 +26,17 @@ void readSerial()  {
           Serial.write(SET_LIVES);
         }
         else{ // outside allowed range
-          Serial.println("Serial Data Error: SET_LIVES code outside limits (0, 255).");
+          Serial.println("Serial Data Error: SET_LIVES outside limits (0, 255).");
         }
       }
       else{//Serial.available != 1
-        Serial.println("Serial Data Error: SET_LIVES expecting byte (1 bytes).");
+        Serial.println("Serial Data Error: SET_LIVES expecting byte (1 byte).");
       }
       break;
       
    
       
-    // Set Number of triggers desired 
+    // SET_RESPAWN 1 
     case SET_RESPAWN:
       // do some error check for correct number of bytes
       if (Serial.available() == 4){
@@ -49,15 +49,84 @@ void readSerial()  {
           Serial.write(SET_RESPAWN); // write returns one byte
         }
         else{//Frequency outside allowed range
-          Serial.println("Serial Data Error: Trig value outside limits (0, 100).");
+          Serial.println("Serial Data Error: SET_RESPAWN outside limits (0, 60000).");
         }
       }
       else{//Serial.available != 2
-        Serial.println("Serial Data Error: Trig adjustment expecting float (4 bytes).");
+        Serial.println("Serial Data Error: SET_RESPAWN expecting long (4 bytes).");
       }
       break;
 
+    // SET_SHIELD 2
+    case SET_SHIELD:
+      // do some error check for correct number of bytes
+      if (Serial.available() == 1){
+        dataVal = Serial.read();
+        // do some error check for valid value (min, max)
+        if(dataVal >= 1 && dataVal <= 255){
+          // Update the number of triggers to desired value
+          my_shield = dataVal;
 
+          Serial.write(SET_SHIELD); // write returns one byte
+        }
+        else{//Frequency outside allowed range
+          Serial.println("Serial Data Error: SET_SHIELD outside limits (0, 255).");
+        }
+      }
+      else{//Serial.available != 2
+        Serial.println("Serial Data Error: SET_RESPAWN expecting byte (1 byte).");
+      }
+      break;
+
+    // SET_ACTIVE 3
+    case SET_ACTIVE:
+      // do some error check for correct number of bytes
+      if (Serial.available() == 1){
+        dataVal = Serial.read();
+        // do some error check for valid value (min, max)
+        if(dataVal >= 1 && dataVal <= my_num_guns){
+          // Update the number of triggers to desired value
+          my_active  = dataVal;
+
+          Serial.write(SET_ACTIVE); // write returns one byte
+        }
+        else{//Frequency outside allowed range
+          Serial.println("Serial Data Error: SET_ACTIVE value outside limits (0, my_num_guns).");
+        }
+      }
+      else{//Serial.available != 2
+        Serial.println("Serial Data Error: SET_ACTIVE expecting byte (1 byte).");
+      }
+      break;
+
+    // TRY_RELOAD 4
+    case TRY_RELOAD:
+    gunReload();
+      break;
+    
+    // TRY_FIRE 5
+    case TRY_FIRE:
+    gunFire();
+      break;
+
+
+#define SET_NUM_GUNS 6
+#define SET_TEAM 7
+#define SET_COLOR 8
+#define SET_PLAYER 9
+#define SET_GAME 10
+#define SET_STARTTIME 11
+#define SET_ENDTIME 12
+#define SET_DISABLED 13
+#define END_GAME 14
+#define GUN_PROPERTIES 15
+#define FIRE_SUCCESS 16
+#define RELOAD_SUCCESS 17
+#define NO_LIVES 18
+#define HITBY 19
+#define KILLEDBY 20
+#define ADD_ENEMY 21
+#define CLEAR_ENEMIES 22
       
     //Invalid operation code!!
     default:
