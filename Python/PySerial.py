@@ -48,7 +48,6 @@ class AndroTag(serial.Serial):
     fmtCode = {
         'ubyte':    'B', \ # 1 unsigned byte
         'ushort':   'H', \ # 2 unsigned Short
-        'float':    'f', \ # 4 float
         'ulong':    'L', \ # 4 unsigned long
         'double':   'd'  \ # 8 double
         }
