@@ -7,7 +7,7 @@ Created on Fri Jan 23 20:24:18 2015
 
 import time
 import serial
-import strut # C structures
+import struct # C structures
 
 class AndroTag(serial.Serial):
     """ Class definition for serial communication to Arduino
@@ -20,36 +20,36 @@ class AndroTag(serial.Serial):
             allows for this.
         """
     opCode = {
-    'SET_LIVES':       0,/
-    'SET_RESPAWN':     1,/
-    'SET_SHIELD':      2,/
-    'SET_ACTIVE':      3,/
-    'TRY_RELOAD':      4,/
-    'TRY_FIRE':        5,/
-    'SET_NUM_GUNS':    6,/
-    'SET_TEAM':        7,/
-    'SET_COLOR':       8,/
-    'SET_PLAYER':      9,/
-    'SET_GAME':       10,/
-    'SET_STARTTIME':  11,/
-    'SET_ENDTIME':    12,/
-    'SET_DISABLED':   13,/
-    'END_GAME':       14,/
-    'GUN_PROPERTIES': 15,/
-    'FIRE_SUCCESS':   16,/
-    'RELOAD_SUCCESS': 17,/
-    'NO_LIVES':       18,/
-    'HITBY':          19,/
-    'KILLEDBY':       20,/
-    'ADD_ENEMY':      21,/
-    'CLEAR_ENEMIES':  22/
+    'SET_LIVES':       0,
+    'SET_RESPAWN':     1,
+    'SET_SHIELD':      2,
+    'SET_ACTIVE':      3,
+    'TRY_RELOAD':      4,
+    'TRY_FIRE':        5,
+    'SET_NUM_GUNS':    6,
+    'SET_TEAM':        7,
+    'SET_COLOR':       8,
+    'SET_PLAYER':      9,
+    'SET_GAME':       10,
+    'SET_STARTTIME':  11,
+    'SET_ENDTIME':    12,
+    'SET_DISABLED':   13,
+    'END_GAME':       14,
+    'GUN_PROPERTIES': 15,
+    'FIRE_SUCCESS':   16,
+    'RELOAD_SUCCESS': 17,
+    'NO_LIVES':       18,
+    'HITBY':          19,
+    'KILLEDBY':       20,
+    'ADD_ENEMY':      21,
+    'CLEAR_ENEMIES':  22
      }
 
     fmtCode = {
-        'ubyte':    'B', \ # 1 unsigned byte
-        'ushort':   'H', \ # 2 unsigned Short
-        'ulong':    'L', \ # 4 unsigned long
-        'double':   'd'  \ # 8 double
+        'ubyte':    'B', # 1 unsigned byte
+        'ushort':   'H', # 2 unsigned Short
+        'ulong':    'L', # 4 unsigned long
+        'double':   'd'  # 8 double
         }
 
     def __init__(self):
@@ -64,30 +64,34 @@ class AndroTag(serial.Serial):
         time.sleep(2.5)
         return 1
 
-    def _send(self, key_value, arg, fmt):
+    def _send(self, opCode, val, fmt):
         """Private function used to send serial data"""
 
-        cmdString      = struct.pack(self.fmtCode['ubyte'], cmd)
-        self.write(cmdString)
+        opcString      = struct.pack(self.fmtCode['ubyte'], opCode)
+        self.write(opcString)
 
-        dataString     = struct.pack(fmt, data)
-        self.write(dataString)
+        valString     = struct.pack(fmt, val)
+        self.write(valString)
 
-        return self.readline()
-
+        ReturnCode = self.readline()
+        print ReturnCode
+        return ReturnCode
 
     def setTeam(self, team_id):
         """ Set the team_id, [1, 256] """
-        if f >= 0 and f <= 255:
+        if team_id >= 0 and team_id <= 255:
             self._send(self.opCode['SET_TEAM'], team_id, self.fmtCode['ubyte'])
 
     def setPlayer(self, player_id):
         """ Set the player_id, [1, 256] """
-        if f >= 0 and f <= 255:
+        if player_id >= 0 and player_id <= 255:
             self._send(self.opCode['SET_PLAYER'], player_id, self.fmtCode['ubyte'])
 
     def setGame(self, game_id):
         """ Set the team_id, [1, 256] """
-        if f >= 0 and f <= 255:
+        if game_id >= 0 and game_id <= 255:
             self._send(self.opCode['SET_GAME'], game_id, self.fmtCode['ubyte'])
 
+Uno = AndroTag()
+Uno.connect(10)
+Uno.readall()

@@ -59,6 +59,7 @@ unsigned long my_respawn = 5000;
 volatile byte my_shield = 255;
 byte my_active = 1;
 byte my_num_guns = 4;
+byte my_active_gun = 0;
 byte my_team = 0;
 byte my_color = 0;
 byte my_player = 0;
@@ -68,8 +69,14 @@ unsigned long my_endtime;
 boolean my_disabled = 1;
 byte my_properties;
 
-volatile long gun_firetime = 300;
-volatile long gun_reloadtime = 5000;
+// by default set up space for 10 differnt guns
+int gunDammage[10] = {20, 7, 45, 60, 0, 0, 0, 0, 0, 0};
+int gunAmmo[10] = {12, 100, 4, 6, 0, 0, 0, 0, 0, 0};
+int gunMaxAmmo[10] = {12, 100, 4, 6, 0, 0, 0, 0, 0, 0};
+long gunFireTime[10] = {500, 50, 750, 500, 0, 0, 0, 0, 0, 0};
+long gunReloadTime[10] = {1000, 1000, 2000, 2000, 0, 0, 0, 0, 0, 0};
+
+long gunAvailable = 0;
 
 
 void setup() {
@@ -98,6 +105,7 @@ void initPins(){
   digitalWrite(SWAPBUT, HIGH);
 }
 
+// This should be moved to a active gameplay loop
 void loop() {
   
   // Check for new instructions on the serial port
@@ -106,4 +114,17 @@ void loop() {
     readSerial();
   }
   checkHit();
+  
+  if (digitalRead(TRIGBUT)==LOW) {
+    gunFire();  
+  }
+  if (digitalRead(RELOADBUT)==LOW) {
+    gunReload();  
+  }
+  if (digitalRead(SWAPBUT)==LOW) {
+    gunSwap();  
+  }
+
+
+  // Check if End Game
 }
