@@ -70,13 +70,13 @@ boolean my_disabled = 1;
 byte my_properties;
 
 // by default set up space for 10 differnt guns
-int gunDammage[10] = {20, 7, 45, 60, 0, 0, 0, 0, 0, 0};
-int gunAmmo[10] = {12, 100, 4, 6, 0, 0, 0, 0, 0, 0};
-int gunMaxAmmo[10] = {12, 100, 4, 6, 0, 0, 0, 0, 0, 0};
-long gunFireTime[10] = {500, 50, 750, 500, 0, 0, 0, 0, 0, 0};
-long gunReloadTime[10] = {1000, 1000, 2000, 2000, 0, 0, 0, 0, 0, 0};
+int gun_dammage[10] = {20, 7, 45, 60, 0, 0, 0, 0, 0, 0};
+int gun_ammo[10] = {12, 100, 4, 6, 0, 0, 0, 0, 0, 0};
+int gun_max_ammo[10] = {12, 100, 4, 6, 0, 0, 0, 0, 0, 0};
+long gun_fire_time[10] = {500, 50, 750, 500, 0, 0, 0, 0, 0, 0};
+long gun_reload_time[10] = {1000, 1000, 2000, 2000, 0, 0, 0, 0, 0, 0};
 
-long gunAvailable = 0;
+long gun_available = 0;
 
 
 void setup() {
