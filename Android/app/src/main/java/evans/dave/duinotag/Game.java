@@ -2,8 +2,11 @@ package evans.dave.duinotag;
 
 import android.graphics.Color;
 
+import java.util.Arrays;
+import java.util.Iterator;
+
 public class Game extends GameSettings{
-    public Team[] teams;
+    public Team[] teams; //TODO: Change teams to either List or HashMap
 
     /** Constructor */
     public Game(){
@@ -49,14 +52,19 @@ public class Game extends GameSettings{
     }
 
     public boolean addPlayerToTeam(GeneralPlayer p, int id) {
-        for (Team t : teams){
-            if (t.id == id) {
-                p.team = t;
-                return t.add(p);
-            }
+        try {
+            Team team = teams[id];
+            return team.add(p);
+        } catch (IndexOutOfBoundsException err) {
+            return false;
         }
+    }
 
-        return false;
+    public Team getTeam(int i){
+        return teams[i];
+    }
+    public int numTeams(){
+        return teams.length;
     }
 
 }

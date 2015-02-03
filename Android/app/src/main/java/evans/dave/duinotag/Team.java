@@ -4,7 +4,9 @@ package evans.dave.duinotag; /**
 
 import android.graphics.Color;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class Team {
@@ -15,7 +17,7 @@ public class Team {
 
     public static final Team NO_TEAM = new Team(255,Color.BLACK, "NO TEAM");
 	
-	public GeneralPlayer[] players;
+	public List<GeneralPlayer> players = Arrays.asList(new GeneralPlayer[254]);
 	private boolean[] slots;
 
 	/** Constructor */
@@ -26,12 +28,13 @@ public class Team {
 		this.id = id;
 		this.color = color;
 		this.name = name;
-        players = new Player[255];
-        slots = new boolean[255];
+        slots = new boolean[254];
 		Arrays.fill(slots,false);
-		Arrays.fill(players,null);
+        for (int i = 0; i<players.size(); i++)
+            players.set(i,GeneralPlayer.NO_PLAYER);
 	}
-	
+
+
 	/** Adding/removing players from a team */
 	public int getNextSlot() {
 		for (int i = 0; i<slots.length; i++)
@@ -46,7 +49,7 @@ public class Team {
 		return count;
 	}
 
-	public boolean add(GeneralPlayer p){
+	public synchronized boolean add(GeneralPlayer p){
         // Always can add to no team
         if (this == Team.NO_TEAM)
             return true;
@@ -56,37 +59,34 @@ public class Team {
             return false;
 		
 		slots[slot] = true;
-		players[slot] = p;
+		players.set(slot, p);
 		p.team = this;
         return true;
 	}
-	public boolean kick(GeneralPlayer p){
+	public synchronized boolean kick(GeneralPlayer p){
         // Always allow leaving NO_TEAM
         if (this == NO_TEAM)
             return true;
 
         // Add the player to the next available slot
-		for (int i = 0; i< players.length; i++){
-			if (players[i] == p) {
-				players[i] = null;
-				slots[i] = false;
-				p.team = this;
-				return true;
-			}
-		}
-		return false;
+        int ind = players.indexOf(p);
+        if (ind < 0 || ind == 255) return false; //Player not on team
+
+        p.team = Team.NO_TEAM;
+        players.set(ind,GeneralPlayer.NO_PLAYER);
+        slots[ind] = false;
+
+        return true;
 	}
 	
 	public boolean hasPlayer(GeneralPlayer p){
-		for (GeneralPlayer p2 : players)
-			if (p2==p)
-				return true;
-		return false;
+        if (players.indexOf(p) >= 0)
+            return true;
+        return false;
 	}
     public String nameFromID(int id){
-        for (GeneralPlayer p : players)
-            if (p.id == id)
-                return p.user.name;
+        if (players.get(id) != GeneralPlayer.NO_PLAYER)
+            return players.get(id).user.name;
         return "UNKNOWN_PLAYER";
     }
 	

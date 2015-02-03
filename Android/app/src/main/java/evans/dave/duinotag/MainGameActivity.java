@@ -74,7 +74,6 @@ public class MainGameActivity extends ActionBarActivity {
         // Load User account from the preferences file
         user = AndrotagApplication.getFromPrefs(this);
         player = new Player(user, Team.NO_TEAM);
-        player.id = pid;
         player.loadout = Gun.getNewLoadout(app.loadout);
 
         app.game.addPlayerToTeam(player, tid);
@@ -161,7 +160,7 @@ public class MainGameActivity extends ActionBarActivity {
     public void setGameInfo(){
         // Write game info
         infoText.setText(String.format("%04x:%02x:%02x - %s",
-                app.game.id,player.team.id, player.id, player.user.name));
+                app.game.id,player.team.id, player.getID(), player.user.name));
     }
 
     public void updateGameTime(){
@@ -211,7 +210,7 @@ public class MainGameActivity extends ActionBarActivity {
     	
     	// Write game info
     	infoText.setText(String.format("%04x:%02x:%02x - %s",
-    					app.game.id,player.team.id, player.id, player.user.name));
+    					app.game.id,player.team.id, player.getID(), player.user.name));
     	timeText.setText(app.game.getTimeStr());
     	
     	// Write player values

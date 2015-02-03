@@ -36,8 +36,7 @@ public class Player extends GeneralPlayer {
 		lastDamage = System.currentTimeMillis();
         lastUpdate = System.currentTimeMillis();
     }
-	
-	
+
 	/** Standard get/set functions */
 	public void setShield(int s) { 
 		shield = s;  

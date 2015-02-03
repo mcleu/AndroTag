@@ -15,13 +15,14 @@ public class GeneralPlayer {
     public int assists;
     public int lives;
     public boolean inactive;
-    public int id;
     public boolean onTeam;
 	
 	public long respawnTime;
 	
 	public Team team;
 	public User user;
+
+    public final static GeneralPlayer NO_PLAYER = new GeneralPlayer(User.NO_USER, Team.NO_TEAM);
 	
 	/** Constructor */
     public GeneralPlayer(){
@@ -67,7 +68,15 @@ public class GeneralPlayer {
         kill(RESPAWN_TIMER);
     }
 
-
+    public int getID(){
+        if (this==GeneralPlayer.NO_PLAYER || team == Team.NO_TEAM){
+            return 255;
+        }
+        int ind = team.players.indexOf(this);
+        if (ind < 0 || ind > 254)
+            return 255;
+        return ind;
+    }
 
 
 

@@ -222,7 +222,7 @@ public class LoadoutConfigActivity extends ActionBarActivity {
     
     public void nextTeam(View view){
     	currentTeam += 1;
-    	currentTeam %= app.game.teams.length;
+    	currentTeam %= app.game.numTeams();
     	updateTeamButton();
     }
     public void randomTeam(View view){
@@ -238,7 +238,7 @@ public class LoadoutConfigActivity extends ActionBarActivity {
 			teamButton.getBackground().setColorFilter(bgColor,PorterDuff.Mode.SCREEN);
 
     	} else {
-			Team team = app.game.teams[currentTeam];
+			Team team = app.game.getTeam(currentTeam);
 			// Set button text
 			teamButton.setText(team.name + " (" + team.countPlayers() + ")");
 			teamButton.getBackground().setColorFilter(team.color,PorterDuff.Mode.SCREEN);
@@ -253,9 +253,9 @@ public class LoadoutConfigActivity extends ActionBarActivity {
         Random rand = new Random();
         if (currentTeam==-1){
             // Random select
-            currentTeam = rand.nextInt(app.game.teams.length);
+            currentTeam = rand.nextInt(app.game.numTeams());
         }
-        int tid = app.game.teams[currentTeam].id;
+        int tid = app.game.getTeam(currentTeam).id;
         int pid = rand.nextInt(256);
 
         // Start the Game screen
