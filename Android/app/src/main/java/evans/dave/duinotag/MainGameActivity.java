@@ -72,10 +72,10 @@ public class MainGameActivity extends ActionBarActivity {
         app.pid = pid;
 
         // Load User account from the preferences file
-        user = User.getFromPrefs(this);
+        user = AndrotagApplication.getFromPrefs(this);
         player = new Player(user, Team.NO_TEAM);
         player.id = pid;
-        player.loadout = app.game.getNewLoadout(app.loadout);
+        player.loadout = Gun.getNewLoadout(app.loadout);
 
         app.game.addPlayerToTeam(player, tid);
 

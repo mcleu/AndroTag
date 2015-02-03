@@ -1,0 +1,22 @@
+package evans.dave.Androtag.Common;
+
+
+public class TCPMessage {
+	
+	public static final byte GET_GAMES = 1; // CS game list pull
+	public static final byte RSP_GAMES = 2; // SC game listing
+	
+	public static final byte REQ_JOIN = 3;  // CS Request to join game
+	public static final byte RSP_JOIN = 4;  // SC Join response (failed, success w id, etc)
+	
+	public static final byte REQ_JOIN_TEAM = 5;  // CS Request to join team in game
+	public static final byte RSP_JOIN_TEAM = 6; // SC Team join team response
+	
+	public static final byte GET_GAME_INFO = 7; // CS Get gameinfo for a specific id
+	public static final byte RSP_GAME_INFO = 8; // SC gameinfo response
+	
+	public static final byte CLIENT_GAME_UPDATE = 9; // CS game update (deaths, isDead, messages)
+	public static final byte SERVER_GAME_UPDATE = 10; // SC game update (teams, isOver, messages)
+	
+
+}

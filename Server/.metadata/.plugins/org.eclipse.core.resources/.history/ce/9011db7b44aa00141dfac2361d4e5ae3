@@ -1,0 +1,78 @@
+
+package evans.dave.AndrotagServer;
+
+
+import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.sql.Time;
+import java.util.LinkedList;
+
+import evans.dave.duinotag.*;
+
+
+public class TCPServer {
+	
+	static LinkedList<Game> games = new LinkedList<>();
+	static LinkedList<User> creators = new LinkedList<>();
+
+    static class ServerThread implements Runnable {
+	    Socket client = null;
+	    public ServerThread(Socket c) {
+	        this.client = c;
+	    }
+	    public void run() {
+	        try {
+	            System.out.println("Connected to client : "+client.getInetAddress().getHostName());
+
+				BufferedReader inFromClient =
+						new BufferedReader(new InputStreamReader(client.getInputStream()));
+				DataOutputStream outToClient = new DataOutputStream(client.getOutputStream());
+	            // Try to read client message
+	            while (true){
+	    			String str = inFromClient.readLine();
+	    			if (str==null) break;
+	    			System.out.println("Received: " + str);
+	    			outToClient.writeBytes(str.toUpperCase() + '\n');
+	            }
+	            System.out.println("Connection client : "+client.getInetAddress().getHostName());
+	            client.close();
+	            
+	        } catch (Exception e) {
+	            System.err.println(e.getMessage());
+	        }
+	    }
+    }
+    
+    public static void main(String args[]) {
+    	
+    	// Set up some example games
+    	games.add(new Game(1, 2, 10, 
+    			System.currentTimeMillis(), 
+    			System.currentTimeMillis()+60*1000*5,
+    			new Team[]{     new Team(0,0xFF0000,"Red"), 
+    		                    new Team(1,0x0000FF,"Blue")},
+    			25));
+    	int id = 1;
+    	int loadoutSize = 1;
+    	int lives = 10;
+    	long startTime = System.currentTimeMillis();
+    	long endTime = startTime + 1000*60*(5);
+    	evans.dave.duinotag.Team[] teams = {};
+    	int maxScore = 25;
+    	Game g = new Game(id, loadoutSize, lives, startTime, endTime, teams, maxScore);
+    	
+        try {
+            ServerSocket server = new ServerSocket(7000);
+            while (true) {
+                Socket p = server.accept();
+                new Thread(new ServerThread(p)).start();
+            }
+        } catch (Exception ex) {
+            System.err.println("Error : " + ex.getMessage());
+        }
+    }
+}

@@ -1,0 +1,117 @@
+
+package evans.dave.AndrotagServer;
+
+
+import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+
+import evans.dave.AndrotagCommon.TCPMessage;
+import evans.dave.duinotag.*;
+
+
+public class TCPServer {
+	
+	static ArrayList<Game> games = new ArrayList<Game>();
+    //(ArrayList<Game>) Collections.synchronizedList(
+    static class ServerThread implements Runnable {
+	    Socket client = null;
+	    public ServerThread(Socket c) {
+	        this.client = c;
+	    }
+	    public void run() {
+	        try {
+	            System.out.println("Connected to client : "+client.getInetAddress().getHostName());
+
+				ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
+				ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
+	            // Try to read client message
+	            while (true){
+	            	// Check first character
+	            	byte c = ois.readByte();
+	            	System.out.println("Read "+c);
+	            	if (c == -1) {
+	            		break;
+	                }else if(c == TCPMessage.STRING_MSG){
+		    			String str = (String) ois.readObject();
+		    			System.out.println("Received: " + str);
+	            	}else if(c == TCPMessage.GET_GAMES){
+	            		// They want the game list, return it
+	            		ArrayList<GameInfo> gameList = getGameList();
+	            		oos.writeByte(TCPMessage.GET_GAMES);
+	            		oos.writeInt(gameList.size());
+	            		System.out.println(gameList);
+	            		for (GameInfo g: gameList)
+	            			oos.writeObject(g);
+	            		oos.flush();
+	                }
+	            }
+	            System.out.println("Connection client : "+client.getInetAddress().getHostName());
+	            client.close();
+	            
+	        } catch (Exception e) {
+	            System.err.println(e.getMessage());
+	        }
+	    }
+    }
+    
+    public static void main(String args[]) {
+    	
+    	// Set up some example games
+    	games.add(new Game(1, 2, 10, 
+    			System.currentTimeMillis(), 
+    			System.currentTimeMillis()+60*1000*5,
+    			new Team[]{     new Team(0,0xFF0000,"Red"), 
+    		                    new Team(1,0x0000FF,"Blue")},
+    			25,
+    			new User("DFarce",001)));
+    	
+    	games.add(new Game(2, 3, 255, 
+    			System.currentTimeMillis()+60*1000*5, 
+    			System.currentTimeMillis()+60*1000*15,
+    			new Team[]{     new Team(4,0xFFFF00,"Blazers Lasers"), 
+    		                    new Team(1,0x00FFFF,"Blu dabadeee"),
+    		                    new Team(3,0xFFFFFF,"White Power")},
+    			100,
+    			new User("Studley Hungwell",6969)));
+    	
+    	games.add(new Game(4, 4, 255, 
+    			System.currentTimeMillis()+60*1000*5, 
+    			System.currentTimeMillis()+60*1000*15,
+    			new Team[]{     new Team(100,0xFFFF00,"Just me"), 
+    		                    new Team(2,0x00FFFF,"Team 2")},
+    			5,
+    			new User("Nick knack paddy whack",2)));
+    	
+    	
+    	
+        try {
+            ServerSocket server = new ServerSocket(7000);
+            while (true) {
+                Socket p = server.accept();
+                new Thread(new ServerThread(p)).start();
+            }
+        } catch (Exception ex) {
+            System.err.println("Error : " + ex.getMessage());
+        }
+        
+        
+    }
+
+	private static ArrayList<GameInfo> getGameList() {
+		ArrayList<GameInfo> gameList = new ArrayList<GameInfo>();
+		for (GameInfo g : games){
+			gameList.add(g.getSuper());
+		}
+		return gameList;
+	}
+}

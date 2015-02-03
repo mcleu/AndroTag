@@ -1,12 +1,17 @@
 package evans.dave.duinotag;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 /**
  * Created by Dave on 19/01/2015.
  */
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 0x76000000L;
 
     public String name;// evans.dave.duinotag.User name
     public int id;      // Name identifier
@@ -29,19 +34,10 @@ public class User {
         return name+Integer.toHexString(id);
     }
 
-    public static final User getFromPrefs(Context ctx){
-        return User.getFromPrefs(ctx, ctx.getSharedPreferences(
-                ctx.getString(R.string.preference_file_key),
-                Context.MODE_PRIVATE));
+    private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
+        in.defaultReadObject();
     }
-    public static final User getFromPrefs(Context ctx, SharedPreferences sharedPref){
-
-        String default_id = ctx.getResources().getString(R.string.saved_id_default);
-        String default_name = ctx.getResources().getString(R.string.saved_name_default);
-
-        String id = sharedPref.getString(ctx.getString(R.string.saved_id),default_id);
-        String name = sharedPref.getString(ctx.getString(R.string.saved_name),default_name);
-
-        return new User(name,id);
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
     }
 }

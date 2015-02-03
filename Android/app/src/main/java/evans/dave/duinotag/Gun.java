@@ -71,9 +71,6 @@ public class Gun {
         return true;
 	}
 
-    public String getStatsAsString(){
-        return String.format("%d-%d-%4.2f-%3.1f",damage,MAX_AMMO, 1000.0f/((float)fireTime), ((float) reloadTime )/1000.0 );
-    }
     public static final String[] getAllNames(Gun[] gs){
         String s[] = new String[gs.length];
         for (int i=0; i<gs.length; i++)
@@ -104,6 +101,13 @@ public class Gun {
 
     public Gun(Gun g){
         this(g.name, g.desc, g.id, g.icon, g.damage, g.MAX_AMMO, g.fireTime, g.reloadTime, g.fireMode, g.firingSound);
+    }
+
+    public static Gun[] getNewLoadout(int[] loadoutInds){
+        Gun ret[] = new Gun[loadoutInds.length];
+        for (int i = 0; i < loadoutInds.length; i++)
+            ret[i] = getNewForID(loadoutInds[i]);
+        return ret;
     }
 
 

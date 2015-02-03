@@ -27,6 +27,17 @@ public class Game extends GameSettings{
         this.teams = teams;
         this.maxScore = maxScore;
     }
+    public Game(int id, int loadoutSize, int lives, long startTime, long endTime,
+                Team[] teams, int maxScore, User creator){
+        this.id = id;
+        this.loadoutSize = loadoutSize;
+        this.lives = lives;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.teams = teams;
+        this.maxScore = maxScore;
+        this.creator = creator;
+    }
 
     public boolean isOver(){
         if (System.currentTimeMillis() > endTime)
