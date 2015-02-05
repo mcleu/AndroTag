@@ -1,9 +1,9 @@
-package evans.dave.duinotag;
+package evans.dave.androtag;
 
 /**
  * Created by Dave on 19/01/2015.
  */
-public class GeneralPlayer {
+public class GeneralPlayer extends User {
 	
 	public static final int INFINITE_LIVES = 255;
 
@@ -20,7 +20,6 @@ public class GeneralPlayer {
 	public long respawnTime;
 	
 	public Team team;
-	public User user;
 
     public final static GeneralPlayer NO_PLAYER = new GeneralPlayer(User.NO_USER, Team.NO_TEAM);
 	
@@ -28,9 +27,11 @@ public class GeneralPlayer {
     public GeneralPlayer(){
         this(User.NO_USER, Team.NO_TEAM);
     }
+    public GeneralPlayer(User u){ this(u, Team.NO_TEAM, 0); }
 	public GeneralPlayer(User u, Team t) { this(u,t,0); }
 	public GeneralPlayer(User u, Team t, int lives) {
-		this.user = u;
+		this.name = u.name;
+        this.uid = u.uid;
         this.team = t;
         this.lives = lives;
 		

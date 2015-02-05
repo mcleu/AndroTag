@@ -1,4 +1,4 @@
-package evans.dave.duinotag;
+package evans.dave.androtag;
 
 /**
  * Created by Dave on 19/01/2015.
@@ -160,11 +160,11 @@ public class Gun {
                 03,         // Identifier
                 R.drawable.burster,
                 60,         // Damage/shot
-                6,          // Shots/clip
-                500,        // time(ms)/shot
-                2000,       // time(ms) for reload
+                5,          // Shots/clip
+                550,        // time(ms)/shot
+                2100,       // time(ms) for reload
                 1,
-                R.raw.lancer_fire);         // Firing mode (0 is normal, 1 is burst)
+                R.raw.boomstick_fire);         // Firing mode (0 is normal, 1 is burst)
     }
 
     public static Gun getPhaser(){
@@ -173,11 +173,11 @@ public class Gun {
                 "Remember to turn off 'stun'.",
                 04,
                 R.drawable.phaser,
-                10,
+                15,
                 100,
                 300,
                 1000,
-                0,
+                1,
                 R.raw.lancer_fire);
     }
 
@@ -188,7 +188,7 @@ public class Gun {
                 R.drawable.delta,
                 12,         // Damage/shot
                 40,         // Shots/clip
-                100,        // time(ms)/shot
+                150,        // time(ms)/shot
                 2100,       // time(ms) for reload
                 1,
                 R.raw.delta_fire);         // Firing mode (0 is normal, 1 is burst)

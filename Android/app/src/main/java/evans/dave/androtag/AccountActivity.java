@@ -1,4 +1,4 @@
-package evans.dave.duinotag;
+package evans.dave.androtag;
 
 import android.content.Context;
 import android.content.Intent;
@@ -58,7 +58,7 @@ public class AccountActivity extends ActionBarActivity {
 
     /** return to main screen */
     public void startMain(View view){
-        // Read name and id from prompt
+        // Read name and uid from prompt
         EditText nameEdit = (EditText) findViewById(R.id.unameEdit);
         EditText idEdit   = (EditText) findViewById(R.id.IDEdit);
 

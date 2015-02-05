@@ -1,4 +1,4 @@
-package evans.dave.duinotag;
+package evans.dave.androtag;
 
 import android.content.Intent;
 import android.media.AudioManager;
@@ -62,21 +62,12 @@ public class MainGameActivity extends ActionBarActivity {
 
         // Get gid, tid, pid, from intent
         Intent intent = getIntent();
-        int gid = intent.getIntExtra("gid", 0xffff);
-        int tid = intent.getIntExtra("tid", 0xff);
-        int pid = intent.getIntExtra("pid", 0xff);
 
         // Set up application resources
         app = (AndrotagApplication)getApplication();
-        app.tid = tid;
-        app.pid = pid;
 
         // Load User account from the preferences file
-        user = AndrotagApplication.getFromPrefs(this);
-        player = new Player(user, Team.NO_TEAM);
-        player.loadout = Gun.getNewLoadout(app.loadout);
-
-        app.game.addPlayerToTeam(player, tid);
+        player = app.player;
 
         // Load sounds
         soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC,0);
@@ -136,12 +127,18 @@ public class MainGameActivity extends ActionBarActivity {
 
             // Set the click listener
             final int buttonID = i;
-            loadoutButtons[i].setOnClickListener( new View.OnClickListener() {
+            /*loadoutButtons[i].setOnClickListener( new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     loadoutButtonClick(v, buttonID);
                 }
-            });
+            });*/
+            loadoutButtons[i].setOnTouchListener(new RepeatListener(100, 100, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loadoutButtonClickAuto(v, buttonID);
+                }
+            }));
 
         }
 			
@@ -160,7 +157,7 @@ public class MainGameActivity extends ActionBarActivity {
     public void setGameInfo(){
         // Write game info
         infoText.setText(String.format("%04x:%02x:%02x - %s",
-                app.game.id,player.team.id, player.getID(), player.user.name));
+                app.game.id,app.game.getTeamID(player.team), player.getID(), player.name));
     }
 
     public void updateGameTime(){
@@ -210,7 +207,7 @@ public class MainGameActivity extends ActionBarActivity {
     	
     	// Write game info
     	infoText.setText(String.format("%04x:%02x:%02x - %s",
-    					app.game.id,player.team.id, player.getID(), player.user.name));
+    					app.game.id,app.game.getTeamID(player.team), player.getID(), player.name));
     	timeText.setText(app.game.getTimeStr());
     	
     	// Write player values
@@ -256,10 +253,26 @@ public class MainGameActivity extends ActionBarActivity {
         if (player.loadout[buttonID] == player.getGun()) {
             if (player.fire()) {
                 if (player.getGun().firingSound != 0)
-                    soundPool.play(gunSoundIds[player.activeGun],1,1,1,0,1);//playGunAudio(player.getGun().firingSound);
+                    soundPool.play(gunSoundIds[player.activeGun],1,1,1,0,1);
             } else {
                 soundPool.play(clickSoundId,1,1,1,0,1);
-                //playGunAudio(R.raw.gun_click);
+            }
+
+
+        } else {
+            player.swap();
+        }
+        updateLoadout();
+        updateAmmo();
+    }
+
+    public void loadoutButtonClickAuto(View v, int buttonID) {
+        if (player.loadout[buttonID] == player.getGun()) {
+            if (player.fire()) {
+                if (player.getGun().firingSound != 0)
+                    soundPool.play(gunSoundIds[player.activeGun],1,1,1,0,1);
+            } else {
+                //soundPool.play(clickSoundId,1,1,1,0,1);
             }
 
 
@@ -350,6 +363,9 @@ public class MainGameActivity extends ActionBarActivity {
             }
 
         }
+
+
+
 
     }
 

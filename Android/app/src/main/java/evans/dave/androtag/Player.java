@@ -1,4 +1,4 @@
-package evans.dave.duinotag;
+package evans.dave.androtag;
 
 /**
  * Created by Dave on 19/01/2015.
@@ -17,9 +17,11 @@ public class Player extends GeneralPlayer {
 	public  Gun[] loadout;
 	
 	/** Constructor */
+    public Player(User u){ this(u, Team.NO_TEAM,10); }
 	public Player(User u, Team t) { this(u, t, 10); }
 	public Player(User u, Team t, int lives) {
-		this.user = u;
+		this.name = u.name;
+        this.uid = u.uid;
 		this.team = t;
 		this.lives = lives;
 		

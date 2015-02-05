@@ -19,7 +19,7 @@ import evans.dave.duinotag.*;
 
 public class TCPServer {
 
-	static ArrayList<Game> games = new ArrayList<Game>();
+	static HashTable<byte,Game> games = new HashTable<byte,Game>();
 
 	// (ArrayList<Game>) Collections.synchronizedList(
 	static class ServerThread implements Runnable {
@@ -88,22 +88,47 @@ public class TCPServer {
 						oos.writeByte(TCPMessage.GET_GAME);
 						// Check if we can add a player to the game
 						
-						// TODO: Check game slots
-						if (true){
+						// Check game slots
+						Game game = findGame(gid);
+						if (game == Game.NO_GAME || game.isFull()){
+							oos.writeByte(0); // Deny join
+						}else {
 							oos.writeByte(1); // Confirm join
-							oos.writeObject(findGame(gid));
+							oos.writeObject(game); // Return game info
 						}
 						oos.flush();
 						break;
 						
 					case TCPMessage.REQ_JOIN_TEAM:
-						// Get the game id, and team id
+						// Get the game id, and team id, and user who's requesting
 						gid = ois.readByte();
 						tid = ois.readByte();
+						User user = (User) ois.readObject();
 						
 						// Check if team is full
 						game = findGame(gid);
-						// Uhhh... game.getTeam(id) would be useful here...
+						
+						// Try and add to game
+						boolean success = game.addUserToTeam(user, tid);
+						
+						if (!success){
+							oos.writeByte(0); // Deny join
+						} else {
+							oos.writeByte(1); // Allow join
+							oos.writeObject(game);
+						}
+						oos.flush();
+						break;
+						
+					case TCPMessage.REQ_CREATE_GAME:
+						
+						// Get the game they want to create
+						Game game = (GameSettings) ois.readObject();
+						
+						// Check if it conflicts with a game already made
+						
+						
+						
 					}
 				}
 				System.out.println("Closed client : "
@@ -127,12 +152,12 @@ public class TCPServer {
 		GeneralPlayer dfarce = new GeneralPlayer(new User("DFarce", 001),
 				Team.NO_TEAM);
 
-		games.add(new Game(1, 2, 10, System.currentTimeMillis(), System
+		games.put(1, new Game(1, 2, 10, System.currentTimeMillis(), System
 				.currentTimeMillis() + 60 * 1000 * 5, new Team[] {
 				new Team(0, 0xFF0000, "Red"), new Team(1, 0x0000FF, "Blue") },
 				25, dfarce.user));
 
-		games.add(new Game(2, 3, 255,
+		games.put(2, new Game(2, 3, 255,
 				System.currentTimeMillis() + 60 * 1000 * 5, System
 						.currentTimeMillis() + 60 * 1000 * 15, new Team[] {
 						new Team(4, 0xFFFF00, "Blazers Lasers"),
@@ -140,7 +165,7 @@ public class TCPServer {
 						new Team(3, 0xFFFFFF, "White Power") }, 100,
 				studley.user));
 
-		games.add(new Game(4, 4, 255,
+		games.put(4, new Game(4, 4, 255,
 				System.currentTimeMillis() + 60 * 1000 * 5, System
 						.currentTimeMillis() + 60 * 1000 * 15, new Team[] {
 						new Team(100, 0xFFFF00, "Just me"),
@@ -149,7 +174,7 @@ public class TCPServer {
 
 		games.get(1).teams[0].add(davek);
 		games.get(1).teams[0].add(studley);
-		games.get(1).teams[1].add(dfarce);
+		games.get(4).teams[1].add(dfarce);
 
 		try {
 			ServerSocket server = new ServerSocket(7000);
@@ -163,18 +188,19 @@ public class TCPServer {
 
 	}
 
-	private static ArrayList<GameInfo> getGameList() {
-		ArrayList<GameInfo> gameList = new ArrayList<GameInfo>();
+	private static HashTable<GameInfo> getGameList() {
+		HashTable<GameInfo> gameList = new HashTable<GameInfo>();
 		for (GameInfo g : games) {
-			gameList.add(g.getSuper());
+			gameList.put(g.id, g.getSuper());
 		}
 		return gameList;
 	}
 	
 	private static Game findGame(byte gid){
+		if (games.containsKey(gid))
 		for (Game g : games)
 			if (g.id == gid)
 				return g;
-		return new Game(); // TODO: Make Game.NO_GAME class
+		return Game.NO_GAME; // TODO: Make Game.NO_GAME class
 	}
 }

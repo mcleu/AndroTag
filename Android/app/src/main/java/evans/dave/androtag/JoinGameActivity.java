@@ -1,10 +1,9 @@
-package evans.dave.duinotag;
+package evans.dave.androtag;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -52,10 +51,15 @@ public class JoinGameActivity extends ActionBarActivity {
         int gid = parseIntFromID(R.id.gidEdit,16);
         int tid = parseIntFromID(R.id.tidEdit,16);
         int pid = parseIntFromID(R.id.pidEdit, 16);
-        intent.putExtra("gid",(int) gid);
+        //intent.putExtra("gid",(int) gid);
 
-        app.tid = tid;
-        app.pid = pid;
+        // TODO: Request game join
+        // TODO: Get game from server
+        // Instead just make the game here
+        app.game = new Game(gid);
+        app.game.teams.add(new Team("Read Team", Color.RED));
+        app.game.teams.add(new Team("Blew Team", Color.BLUE));
+        app.game.loadoutSize = 4;
 
         startActivity(intent);
 

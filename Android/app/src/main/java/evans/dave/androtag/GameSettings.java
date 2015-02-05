@@ -1,9 +1,4 @@
-package evans.dave.duinotag;
-
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import java.util.concurrent.TimeUnit;
+package evans.dave.androtag;
 
 public class GameSettings extends GameInfo{
 

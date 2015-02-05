@@ -1,19 +1,15 @@
-package evans.dave.duinotag;
+package evans.dave.androtag;
 
 /**
  * Created by Dave on 29/01/2015.
  */
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class GunOptionAdapter extends ArrayAdapter<String> {

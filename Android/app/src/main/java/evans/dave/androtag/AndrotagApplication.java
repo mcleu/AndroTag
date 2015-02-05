@@ -1,4 +1,4 @@
-package evans.dave.duinotag;
+package evans.dave.androtag;
 
 import android.app.Application;
 import android.content.Context;
@@ -12,8 +12,7 @@ public class AndrotagApplication extends Application {
 
     public int[] loadout;
     public Game game;
-    public int pid;
-    public int tid;
+    public Player player;
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -35,7 +34,7 @@ public class AndrotagApplication extends Application {
         super.onTerminate();
     }
 
-    public static final User getFromPrefs(Context ctx){
+    public static final User loadUser(Context ctx){
         return getFromPrefs(ctx, ctx.getSharedPreferences(
                 ctx.getString(R.string.preference_file_key),
                 Context.MODE_PRIVATE));

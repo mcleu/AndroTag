@@ -1,31 +1,29 @@
-package evans.dave.duinotag; /**
+package evans.dave.androtag; /**
  * Created by Dave on 19/01/2015.
  */
 
 import android.graphics.Color;
+import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
 public class Team {
 
-    public int id;
     public int color;
     public String name;
 
-    public static final Team NO_TEAM = new Team(255,Color.BLACK, "NO TEAM");
+    public static final Team NO_TEAM = new Team("NO TEAM", Color.BLACK);
 	
 	public List<GeneralPlayer> players = Arrays.asList(new GeneralPlayer[254]);
 	private boolean[] slots;
 
 	/** Constructor */
     public Team(){
-        this(255,Color.BLACK, "NO_TEAM");
+        this("NO_TEAM", Color.BLACK);
     }
-	public Team(int id, int color, String name){
-		this.id = id;
+	public Team(String name, int color){
 		this.color = color;
 		this.name = name;
         slots = new boolean[254];
@@ -36,12 +34,13 @@ public class Team {
 
 
 	/** Adding/removing players from a team */
-	public int getNextSlot() {
+	public synchronized int getNextSlot() {
 		for (int i = 0; i<slots.length; i++)
-			if (slots[i])
+			if (!slots[i])
 				return i;
 		return -1;
 	}
+
 	public int countPlayers(){
 		int count = 0;
 		for (boolean slot : slots)
@@ -57,7 +56,7 @@ public class Team {
 		int slot = getNextSlot();
 		if (slot < 0 )
             return false;
-		
+
 		slots[slot] = true;
 		players.set(slot, p);
 		p.team = this;
@@ -86,8 +85,8 @@ public class Team {
 	}
     public String nameFromID(int id){
         if (players.get(id) != GeneralPlayer.NO_PLAYER)
-            return players.get(id).user.name;
-        return "UNKNOWN_PLAYER";
+            return players.get(id).name;
+        return GeneralPlayer.NO_PLAYER.name;
     }
 	
 	/** evans.dave.duinotag.Team Stats */

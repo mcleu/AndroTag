@@ -1,4 +1,4 @@
-package evans.dave.duinotag;
+package evans.dave.androtag;
 
 /**
  * Created by Dave on 23/01/2015.

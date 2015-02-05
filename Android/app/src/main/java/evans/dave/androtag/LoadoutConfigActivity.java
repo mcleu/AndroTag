@@ -1,35 +1,22 @@
-package evans.dave.duinotag;
+package evans.dave.androtag;
 
-import android.app.ActionBar;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.content.res.XmlResourceParser;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.util.Xml;
+import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 import android.graphics.PorterDuff;
 
-import org.xmlpull.v1.XmlPullParser;
-
-import java.util.LinkedHashMap;
 import java.util.Random;
 
 
@@ -37,38 +24,12 @@ public class LoadoutConfigActivity extends ActionBarActivity {
 
     AndrotagApplication app;
 
-    private int gid;
     private int currentTeam;
 
 	private Button teamButton;	
 
     private LinearLayout loadoutLayout;
-
     private ImageButton[] loadoutButtons;
-
-    // Adds the specified gun to the loadout, if possible
-    public boolean addGun(int gunInt){
-        if (gunInt == 255)
-            return false;
-        for (int i: app.loadout)
-            if (gunInt == i)
-                return false;
-        for (int i = 0; i<app.loadout.length; i++)
-            if (app.loadout[i] == 255){
-                app.loadout[i] = gunInt;
-                return true;
-            }
-        return false;
-    }
-
-    // Clears the specified loadout position, if possible
-    public boolean removeGun(int gunInd){
-        if (app.loadout[gunInd] != 255) {
-            app.loadout[gunInd] = 255;
-            return true;
-        }
-        return false;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,25 +38,14 @@ public class LoadoutConfigActivity extends ActionBarActivity {
 
         // Get application
         app = (AndrotagApplication) getApplication();
-
-        // Get intent extras
-        Bundle extras = getIntent().getExtras();
-        gid = extras.getInt("gid");
-
-        // In the future, this will get the game info from the server, for now just create one
-        // TODO: Load game config from server
-        Team teams[] = new Team[2];
-        teams[0] = new Team(0,Color.RED,"Red Team");
-        teams[1] = new Team(1,Color.BLUE,"Blue Team");
-        app.game = new Game(new GameSettings(gid), teams);
-
+        // Game config already loaded from server in app.game
 
         // Update the team button
         teamButton = (Button) findViewById(R.id.teamButton);
         currentTeam = 0;
         updateTeamButton();
-        
 
+        // Make the loadout
         app.loadout = new int[app.game.loadoutSize];
         for (int i = 0; i<app.loadout.length; i++)
             app.loadout[i] = i;
@@ -103,8 +53,8 @@ public class LoadoutConfigActivity extends ActionBarActivity {
         // Find the available gun scroll and loadout locations
         loadoutLayout = (LinearLayout) findViewById(R.id.loadoutLayout);
 
-        // Set the loadout buttons
 
+        // Set the loadout buttons
         loadoutButtons = new ImageButton[app.loadout.length];
         for (int i = 0; i<app.loadout.length; i++) {
 
@@ -161,8 +111,8 @@ public class LoadoutConfigActivity extends ActionBarActivity {
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                availableButtonClick(view, (int) id);
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                availableButtonClick(v, (int) id);
             }
         });
 
@@ -215,7 +165,6 @@ public class LoadoutConfigActivity extends ActionBarActivity {
             button = loadoutButtons[i];
             gun = Gun.getNewForID(app.loadout[i]);
             loadoutButtons[i].setBackgroundResource(gun.icon);
-
         }
 
     }
@@ -255,17 +204,16 @@ public class LoadoutConfigActivity extends ActionBarActivity {
             // Random select
             currentTeam = rand.nextInt(app.game.numTeams());
         }
-        int tid = app.game.getTeam(currentTeam).id;
-        int pid = rand.nextInt(256);
+
+        app.player = new Player(AndrotagApplication.loadUser(this));
+        app.player.loadout = Gun.getNewLoadout(app.loadout);
+
+        // TODO: Ask server to join team
+        boolean ret = app.game.addPlayerToTeam(app.player, currentTeam);
 
         // Start the Game screen
         Intent intent = new Intent(this,MainGameActivity.class);
-        intent.putExtra("gid",(int) gid);
-        intent.putExtra("tid",(int) tid);
-        intent.putExtra("pid",(int) pid);
 
-        app.tid = tid;
-        app.pid = pid;
 
         startActivity(intent);
     }

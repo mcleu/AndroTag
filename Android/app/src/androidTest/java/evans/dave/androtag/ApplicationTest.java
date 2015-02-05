@@ -1,4 +1,4 @@
-package evans.dave.duinotag;
+package evans.dave.androtag;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

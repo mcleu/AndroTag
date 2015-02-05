@@ -1,4 +1,4 @@
-package evans.dave.duinotag;
+package evans.dave.androtag;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,11 +20,9 @@ public class MainActivity extends ActionBarActivity {
         // Get application and initialize everything
         app = (AndrotagApplication) getApplication();
         Team teams[] = new Team[2];
-        teams[0] = new Team(0, Color.RED,"Red Team");
-        teams[1] = new Team(1,Color.BLUE,"Blue Team");
-        app.game = new Game(new GameSettings(0xFFFF), teams);
-        app.pid = 0;
-        app.tid = 1;
+        teams[0] = new Team("Red Team", Color.RED);
+        teams[1] = new Team("Blue Team", Color.BLUE);
+        app.game = new Game(0xFFFF, teams); //TODO: Use better constructor here
         app.loadout = new int[2];
         app.loadout[0] = 0;
         app.loadout[1] = 1;

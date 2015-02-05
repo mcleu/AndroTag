@@ -1,4 +1,4 @@
-package evans.dave.duinotag;
+package evans.dave.androtag;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;

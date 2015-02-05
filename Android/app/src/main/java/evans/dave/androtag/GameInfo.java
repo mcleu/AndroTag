@@ -1,4 +1,4 @@
-package evans.dave.duinotag;
+package evans.dave.androtag;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
