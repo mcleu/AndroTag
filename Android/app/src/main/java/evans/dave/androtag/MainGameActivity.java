@@ -14,8 +14,12 @@ import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class MainGameActivity extends ActionBarActivity {
@@ -80,12 +84,14 @@ public class MainGameActivity extends ActionBarActivity {
 		// Get various layout items
 		infoText 	= (TextView) findViewById(R.id.textView);
 		timeText 	= (TextView) findViewById(R.id.textView2);
-		shieldText 	= (TextView) findViewById(R.id.textView4);
+		shieldText 	= (TextView) findViewById(R.id.shieldText);
 		livesText 	= (TextView) findViewById(R.id.textView3);
-        ammoText    = (TextView) findViewById(R.id.textView6);
+        ammoText    = (TextView) findViewById(R.id.ammoText);
 		
 		shieldBar 	= (ProgressBar) findViewById(R.id.progressBar);
 		ammoBar 	= (ProgressBar) findViewById(R.id.progressBar2);
+
+        ListView scoreboard = (ListView) findViewById(R.id.scoreboard);
 
 		// Layout Guns
         LinearLayout loadoutLayout = (LinearLayout) findViewById(R.id.loadoutLayout);
@@ -141,6 +147,24 @@ public class MainGameActivity extends ActionBarActivity {
             }));
 
         }
+
+        /** Make the leaderboard **/
+        // TEAM 1
+        // TEAM 2
+        // TEAM 1 Player 1
+        // TEAM 1 Player 2 etc
+        ArrayList<Scored> boardItems = new ArrayList<Scored>();
+        for (Team t: app.game.teams)
+                boardItems.add(t);
+        for (Team t: app.game.teams)
+                for (GeneralPlayer p: t.players)
+                    if (p != player.NO_PLAYER)
+                        boardItems.add(p);
+        Log.v("MainGameActivity","Board is " + boardItems);
+        final ScoreboardLineAdapter adapter = new ScoreboardLineAdapter(this, boardItems.toArray(new Scored[0]));
+        Log.v("MainGameActivity","Adapter is " + adapter);
+        Log.v("MainGameActivity","Names are "+boardItems.toArray(new Scored[0]));
+        scoreboard.setAdapter(adapter);
 			
 		// Update the user interface with the data
         setGameInfo();
@@ -184,7 +208,8 @@ public class MainGameActivity extends ActionBarActivity {
         player.update();
         ammoBar.setMax(player.getGun().MAX_AMMO);
         ammoBar.setProgress(player.getGun().ammo);
-        ammoText.setText(player.getGun().ammo + "/" + player.getGun().MAX_AMMO);
+        //ammoText.setText(player.getGun().ammo + "/" + player.getGun().MAX_AMMO);
+        ammoText.setText(""+player.getGun().ammo);
     }
 
     public void updateLives(){

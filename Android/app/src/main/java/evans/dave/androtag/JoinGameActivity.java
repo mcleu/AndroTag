@@ -61,6 +61,17 @@ public class JoinGameActivity extends ActionBarActivity {
         app.game.teams.add(new Team("Blew Team", Color.BLUE));
         app.game.loadoutSize = 4;
 
+        app.game.addPlayerToTeam(new GeneralPlayer("Studley Hungwell"),0);
+        app.game.addPlayerToTeam(new GeneralPlayer("DFarce"),0);
+        app.game.addPlayerToTeam(new GeneralPlayer("Apocalypse2"),0);
+
+
+        app.game.addPlayerToTeam(new GeneralPlayer("Hudley Stungwell"),1);
+        app.game.addPlayerToTeam(new GeneralPlayer("DMS The man"),1);
+        app.game.addPlayerToTeam(new GeneralPlayer("ACockALips2"),1);
+        app.game.addPlayerToTeam(new GeneralPlayer("ThisIsFarTooLongANameAndShouldProbablyBeTruncated"),1);
+
+
         startActivity(intent);
 
     }

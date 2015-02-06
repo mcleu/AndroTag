@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class Team {
+public class Team implements Scored {
 
     public int color;
     public String name;
@@ -89,7 +89,7 @@ public class Team {
         return GeneralPlayer.NO_PLAYER.name;
     }
 	
-	/** evans.dave.duinotag.Team Stats */
+	/** Scored interface functions */
 	public int getKills(){
 		int stat = 0;
 		for (GeneralPlayer p : players)
@@ -117,6 +117,9 @@ public class Team {
 			stat += p.score;
 		return stat;
 	}
-	
+
+    public int getColor(){ return color;}
+    public String getName() { return name; }
+
 
 }

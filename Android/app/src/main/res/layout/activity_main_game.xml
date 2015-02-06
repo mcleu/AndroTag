@@ -1,5 +1,6 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -50,7 +51,6 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="65dp"
-        android:layout_below="@+id/linearLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/linearLayout2">
@@ -73,7 +73,8 @@
                 android:layout_column="3"
                 android:layout_gravity="center_horizontal"
                 android:progressDrawable="@drawable/lifebar"
-                android:onClick="clickShield" />
+                android:onClick="clickShield"
+                android:paddingBottom="5dp" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -85,23 +86,38 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="8/12"
-                    android:id="@+id/textView6"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:layout_weight="8"
-                    android:textColor="#ffffffff"
-                    android:gravity="left" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="80"
                     android:id="@+id/textView4"
                     android:layout_gravity="center_horizontal|bottom"
                     android:layout_weight="8"
                     android:gravity="center"
-                    android:textColor="#ffffffff" />
+                    android:textColor="#ffffffff"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="100"
+                    android:id="@+id/ammoText"
+                    android:textColor="#ffffffff"
+                    android:gravity="left"
+                    android:paddingRight="5dp"
+                    android:minEms="4" />
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progressBar2"
+                    android:layout_weight="8"
+                    android:max="100"
+                    android:progress="80"
+                    android:layout_row="0"
+                    android:layout_column="3"
+                    android:progressDrawable="@drawable/ammobar"
+                    android:onClick="clickAmmo" />
+
             </LinearLayout>
 
         </LinearLayout>
@@ -118,6 +134,20 @@
             android:background="@drawable/outline"
             android:layout_gravity="center|left|top"
             android:onClick="clickLives"
+            android:gravity="center"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="100"
+            android:id="@+id/shieldText"
+            android:textSize="35dp"
+            android:textColor="#ffffffff"
+            android:background="@drawable/outline"
+            android:layout_gravity="center|left|top"
+            android:onClick="clickLives"
             android:gravity="center" />
 
     </LinearLayout>
@@ -125,40 +155,27 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/linearLayout2"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/linearLayout3">
+        android:id="@+id/linearLayout3"
+        android:paddingBottom="10dp">
 
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar2"
-            android:layout_weight="8"
-            android:max="100"
-            android:progress="80"
-            android:layout_row="0"
-            android:layout_column="3"
-            android:layout_gravity="center_horizontal"
-            android:progressDrawable="@drawable/ammobar"
-            android:onClick="clickAmmo" />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:layout_below="@+id/linearLayout3"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/linearLayout4">
+        android:id="@+id/linearLayout4"
+        android:paddingBottom="5dp">
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="230px"
+            android:layout_height="90dp"
             android:id="@+id/loadoutLayout"
             android:gravity="center_horizontal"
             android:layout_marginBottom="20dp"
@@ -166,18 +183,13 @@
 
     </LinearLayout>
 
-    <TextView
+    <ListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:text="@string/test_log"
-        android:id="@+id/textView5"
-        android:layout_below="@+id/linearLayout4"
+        android:id="@+id/scoreboard"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_margin="5dp"
-        android:background="@color/dt_slate_gray"
-        android:padding="5dp"
-        android:textColor="#FFFFFFFF" />
+        android:background="@color/dt_slate_gray" />
 
 
-</RelativeLayout>
+</LinearLayout>

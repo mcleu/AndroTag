@@ -3,7 +3,7 @@ package evans.dave.androtag;
 /**
  * Created by Dave on 19/01/2015.
  */
-public class Player extends GeneralPlayer {
+public class Player extends GeneralPlayer implements Scored {
 
 	final static long SHIELD_DELAY = 3000;
 	final static long MS_PER_SHIELD = 50;

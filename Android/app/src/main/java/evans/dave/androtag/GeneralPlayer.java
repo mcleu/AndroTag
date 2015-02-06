@@ -1,9 +1,11 @@
 package evans.dave.androtag;
 
+import java.util.Random;
+
 /**
  * Created by Dave on 19/01/2015.
  */
-public class GeneralPlayer extends User {
+public class GeneralPlayer extends User implements Scored {
 	
 	public static final int INFINITE_LIVES = 255;
 
@@ -27,6 +29,8 @@ public class GeneralPlayer extends User {
     public GeneralPlayer(){
         this(User.NO_USER, Team.NO_TEAM);
     }
+    public GeneralPlayer(String name) {this(new User(name,new Random().nextInt(255))); }
+    public GeneralPlayer(String name, int id) {this(new User(name,id)); }
     public GeneralPlayer(User u){ this(u, Team.NO_TEAM, 0); }
 	public GeneralPlayer(User u, Team t) { this(u,t,0); }
 	public GeneralPlayer(User u, Team t, int lives) {
@@ -78,6 +82,14 @@ public class GeneralPlayer extends User {
             return 255;
         return ind;
     }
+
+    /** Scored interface functions**/
+    public int getScore(){ return score; }
+    public int getKills(){ return kills; }
+    public int getDeaths(){ return deaths; }
+    public int getAssists(){ return assists;}
+    public int getColor(){ return this.team.color; }
+    public String getName(){ return this.name; }
 
 
 
