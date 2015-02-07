@@ -12,6 +12,7 @@ public class Team implements Scoring {
 
     public int color;
     public String name;
+    public int maxPlayers = 254;
 
     public static final Team NO_TEAM = new Team("NO TEAM", Color.BLACK);
 	
@@ -46,6 +47,9 @@ public class Team implements Scoring {
 			if (slot) count++;
 		return count;
 	}
+    public int getMaxPlayers(){
+        return maxPlayers;
+    }
 
 	public synchronized boolean add(GeneralPlayer p){
         // Always can add to no team

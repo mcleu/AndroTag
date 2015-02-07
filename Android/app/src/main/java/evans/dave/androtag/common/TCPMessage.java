@@ -14,7 +14,7 @@ public class TCPMessage {
 	public static final byte GAME_UPDATE = 5; // CS game update (deaths, isDead, messages)
 	                                          // SC game update (teams, isOver, messages)
 	
-	public static final byte MAKE_GAME = 6;
+	public static final byte REQ_CREATE_GAME = 6;
 	
     public static final byte STRING_MSG = 0; // String escape
     public static final byte CLOSE = -1;

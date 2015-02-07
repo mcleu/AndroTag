@@ -9,6 +9,8 @@ public class Game extends GameInfo{
     public int lives;
     public int maxScore;
 
+    public static final Game NO_GAME = new Game(255);
+
     /** Constructors */
 
     // Standard
@@ -84,6 +86,13 @@ public class Game extends GameInfo{
     public int getTeamID(Team t) { return teams.indexOf(t); }
     public int numTeams(){
         return teams.size();
+    }
+
+    public boolean isFull(){
+        for (Team t: teams)
+            if (t.countPlayers() < t.getMaxPlayers())
+                return true;
+        return false;
     }
 
 }

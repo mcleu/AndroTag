@@ -1,6 +1,7 @@
 package evans.dave.androtag.server;
 
-import java.awt.Color;
+import android.graphics.Color;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.EOFException;
@@ -12,14 +13,15 @@ import java.net.Socket;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.LinkedList;
 
-import evans.dave.AndrotagCommon.TCPMessage;
-import evans.dave.duinotag.*;
+import evans.dave.androtag.common.*;
 
 public class TCPServer {
 
-	static HashTable<byte,Game> games = new HashTable<byte,Game>();
+	static Hashtable<Integer,Game> games = new Hashtable<Integer,Game>();
 
 	// (ArrayList<Game>) Collections.synchronizedList(
 	static class ServerThread implements Runnable {
@@ -89,7 +91,7 @@ public class TCPServer {
 						// Check if we can add a player to the game
 						
 						// Check game slots
-						Game game = findGame(gid);
+						game = findGame(gid);
 						if (game == Game.NO_GAME || game.isFull()){
 							oos.writeByte(0); // Deny join
 						}else {
@@ -109,7 +111,8 @@ public class TCPServer {
 						game = findGame(gid);
 						
 						// Try and add to game
-						boolean success = game.addUserToTeam(user, tid);
+                        // TODO: This isn't quite what I want here
+						boolean success = game.addPlayerToTeam(new GeneralPlayer(user), tid);
 						
 						if (!success){
 							oos.writeByte(0); // Deny join
@@ -123,10 +126,11 @@ public class TCPServer {
 					case TCPMessage.REQ_CREATE_GAME:
 						
 						// Get the game they want to create
-						Game game = (GameSettings) ois.readObject();
+						game = (Game) ois.readObject();
 						
 						// Check if it conflicts with a game already made
-						
+                        // TODO: Create game
+						break;
 						
 						
 					}
@@ -145,36 +149,38 @@ public class TCPServer {
 	public static void main(String args[]) {
 
 		// Set up some example games
-		GeneralPlayer davek = new GeneralPlayer(new User("Davek", 0),
-				Team.NO_TEAM);
-		GeneralPlayer studley = new GeneralPlayer(new User("Studley Hungwell",
-				6969), Team.NO_TEAM);
-		GeneralPlayer dfarce = new GeneralPlayer(new User("DFarce", 001),
-				Team.NO_TEAM);
+		GeneralPlayer davek = new GeneralPlayer("Davek");
+		GeneralPlayer studley = new GeneralPlayer("Studley Hungwell");
+		GeneralPlayer dfarce = new GeneralPlayer("DFarce");
+
+        Team[] teams = new Team[] {
+                        new Team("Red",Color.RED),
+                        new Team("Blue Blazers", Color.BLUE),
+                        new Team("Hwhite Hwpower", Color.WHITE) };
 
 		games.put(1, new Game(1, 2, 10, System.currentTimeMillis(), System
-				.currentTimeMillis() + 60 * 1000 * 5, new Team[] {
-				new Team(0, 0xFF0000, "Red"), new Team(1, 0x0000FF, "Blue") },
-				25, dfarce.user));
+				.currentTimeMillis() + 60 * 1000 * 5,
+                new Team[] {teams[0],teams[1]},
+                25,
+                dfarce));
 
 		games.put(2, new Game(2, 3, 255,
 				System.currentTimeMillis() + 60 * 1000 * 5, System
-						.currentTimeMillis() + 60 * 1000 * 15, new Team[] {
-						new Team(4, 0xFFFF00, "Blazers Lasers"),
-						new Team(1, 0x00FFFF, "Blu dabadeee"),
-						new Team(3, 0xFFFFFF, "White Power") }, 100,
-				studley.user));
+						.currentTimeMillis() + 60 * 1000 * 15,
+                teams,
+                100,
+				studley));
 
 		games.put(4, new Game(4, 4, 255,
 				System.currentTimeMillis() + 60 * 1000 * 5, System
-						.currentTimeMillis() + 60 * 1000 * 15, new Team[] {
-						new Team(100, 0xFFFF00, "Just me"),
-						new Team(2, 0x00FFFF, "Team 2") }, 5, new User(
-						"Nick knack paddy whack", 2)));
+						.currentTimeMillis() + 60 * 1000 * 15,
+                new Team[] {teams[1],teams[2]},
+                5,
+                new User("Nick knack paddy whack", 2)));
 
-		games.get(1).teams[0].add(davek);
-		games.get(1).teams[0].add(studley);
-		games.get(4).teams[1].add(dfarce);
+		teams[0].add(davek);
+		teams[0].add(studley);
+		teams[1].add(dfarce);
 
 		try {
 			ServerSocket server = new ServerSocket(7000);
@@ -188,19 +194,19 @@ public class TCPServer {
 
 	}
 
-	private static HashTable<GameInfo> getGameList() {
-		HashTable<GameInfo> gameList = new HashTable<GameInfo>();
-		for (GameInfo g : games) {
-			gameList.put(g.id, g.getSuper());
+	private static Hashtable<Integer,GameInfo> getGameList() {
+		Hashtable<Integer,GameInfo> gameList = new Hashtable<Integer,GameInfo>();
+        Enumeration<Integer> enumKey = games.keys();
+        while(enumKey.hasMoreElements()) {
+            Integer id = enumKey.nextElement();
+			gameList.put(id, games.get(id).getSuper());
 		}
 		return gameList;
 	}
 	
 	private static Game findGame(byte gid){
 		if (games.containsKey(gid))
-		for (Game g : games)
-			if (g.id == gid)
-				return g;
-		return Game.NO_GAME; // TODO: Make Game.NO_GAME class
+            return games.get(gid);
+		return Game.NO_GAME;
 	}
 }
