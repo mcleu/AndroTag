@@ -5,6 +5,141 @@ import evans.dave.androtag.R;
 /**
  * Created by Dave on 19/01/2015.
  */
+
+
+/**
+LOADOUT 1	- 	STANDARD
+	2 slots
+	Lancer
+	Mercury Rifle
+	Plasma Coil
+	Accelerator
+	Magnum
+	Pulsar
+	Shotgun
+	
+LOADOUT 2   -   STD EQUIPMENT
+	3 slots
+	Lancer
+	Mercury Rifle
+	Plasma Coil
+	Accelerator
+	Magnum
+	Pulsar
+	Shotgun
+	Shield lock
+	Energy Sink
+	
+LOADOUT 3   -   EXTENDED
+	2 slots
+	STD +
+	Sonos
+	Sniper
+	Heat Pistol
+
+LOADOUT 4    -   EXT EQuipment
+	3 slots
+	EXT +
+	All equipment except arc charger
+
+LOADOUT 5    -   Human
+	
+6 Alien?
+
+7 All
+
+8 CUSTOM 1
+
+9 CUSTOM 2
+
+	
+
+
+
+*/
+
+/**
+ * PLANNED GUN LIST
+ *
+ * RIFLES ---------------
+ *
+ *      Lancer          Boring rifle
+ *                      Allows headshots
+ *                      medium ROF
+ *                      ~12 shots/clip
+ *                      ~5 shots to kill
+ *
+ *      Mercury Rifle   Uses heat instead of reload/ammo, on overhead goes on cd for a long while
+ *                      Allows headshots
+ *                      Can fire very quickly, but overheats quickly if you do so
+ *
+ *      Plasma Coil     Laser type weapon
+ *                      No headshots
+ *                      Very high ROF
+ *                      Starts with low damage (5-10)
+ *                      increased damage if subsequent shots hit (eg. +10 dmg/hit)
+ *
+ *      Sonos     		Rifle + shotgun combo
+ *                      Allows headshots (sniper)
+ *                      Lower damage than either shotgun or sniper
+ *                      Fires both packets at the same-ish time
+ *
+ * HE RIFLES ----------
+ *
+ *      Accelerator     Sniper rifle
+ *                      Allows headshots
+ *                      2-3 hits normally
+ *                      Can hold trigger to charge for firing the remaining clip at once (OHKO usually)
+ *
+ *
+ *      Sniper Rifle    Standard sniper
+ *                      Allows headshots
+ *                      Needed for people who don't want the cool-better rifles
+ *
+ * HAND CANNONS ---------
+ *
+ *      Magnum          Close range pistol
+ *                      Allows headshots
+ *                      Use packet overlapping to limit range
+ *                      Quite high damage and ROF because of limitation
+ *
+ *      Heat Pistol		Close range pistol
+ *						No headshots
+ *						Packet overlapping
+ *						Heat based
+ *						Full Auto
+ *
+ *		Arc Pistol		Drains shields to give a little more punch
+ *						Headshots
+ *						Packet overlapping
+ *		
+ *
+ * PARTY KILLERS ---------
+ *
+ *      Pulsar          Close ranged machine gun
+ *                      No headshots
+ *                      Random hit
+ *
+ *      Shotgun         Shotgun
+ *                      No headshots
+ *                      Incremental reload
+ *
+ * EQUIPMENT ------------
+ *
+ *      Shield lock     Invulnerability for 5s, regen if lock too OP
+ *
+ *		Arc Charger		Medic
+ *						Heals allies in burst 10 or some small number
+ *
+ *      Booster         Higher damage/ always headshot
+ *
+ *		Energy sink		No outward lights (effectively camo)
+ *
+ */
+
+
+
+
 public class Gun {
 
 	/** evans.dave.duinotag.Gun descriptor variables */
@@ -174,7 +309,7 @@ public class Gun {
                 "A small power cell is enough to keep this low powered blaster charged a long time. "+
                 "Remember to turn off 'stun'.",
                 04,
-                R.drawable.phaser,
+                R.drawable.phaser_small,
                 15,
                 100,
                 300,
@@ -195,5 +330,6 @@ public class Gun {
                 1,
                 R.raw.delta_fire);         // Firing mode (0 is normal, 1 is burst)
     }
+
 
 }
