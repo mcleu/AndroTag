@@ -10,7 +10,7 @@
     <string name="button_create">Create</string>
     <string name="button_account">Account</string>
     <string name="button_options">Options</string>
-    <string name="button_test">--TEST MODE--</string>
+    <string name="button_test">Serial Test</string>
     <string name="test_log">You killed <b>JonesJones123</b>\nYou were killed by <b>DMS_Oh_No</b>\nRed team needs 10 kills to win!</string>
     <string name="title_activity_main_game">Duino Tag</string>
     <string name="title_activity_account">Account Settings</string>
@@ -23,5 +23,6 @@
     <string name="title_activity_loadout_config">LoadoutConfigActivity</string>
     <string name="title_activity_test">testActivity</string>
     <string name="title_activity_list_view_example">ListViewExampleActivity</string>
+    <string name="title_activity_serial_test">SerialTestActivity</string>
 
 </resources>

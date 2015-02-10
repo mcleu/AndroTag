@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="evans.dave.androtag" >
 
+
+    <uses-feature android:name="android.hardware.usb.host"/>
+
     <application
         android:name=".app.AndrotagApplication"
         android:allowBackup="true"
@@ -21,6 +24,10 @@
             android:name=".app.MainGameActivity"
             android:label="@string/title_activity_main_game"
             android:parentActivityName=".app.MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".app.MainActivity" />
@@ -44,6 +51,20 @@
         <activity
             android:name=".app.ListViewExampleActivity"
             android:label="@string/title_activity_list_view_example" >
+        </activity>
+        <activity
+            android:name=".app.SerialTestActivity"
+            android:label="@string/title_activity_serial_test"
+            android:parentActivityName=".app.MainActivity" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="evans.dave.androtag.app.MainActivity" />
         </activity>
     </application>
 

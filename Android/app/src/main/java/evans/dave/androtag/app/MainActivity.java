@@ -58,10 +58,9 @@ public class MainActivity extends ActionBarActivity {
     }
 
     /** Start testing mode */
-    public void startTest(View view){
+    public void startSerialTest(View view){
         // Start main game screen
-        Intent intent = new Intent(this,ListViewExampleActivity.class);
-        intent.putExtra("gid",(int) 15);
+        Intent intent = new Intent(this,SerialTestActivity.class);
         startActivity(intent);
     }
 

@@ -46,7 +46,7 @@
         android:layout_margin="10dp" />
 
     <Button
-        android:onClick="startTest"
+        android:onClick="startSerialTest"
 
         android:layout_weight="1"
         android:layout_width="match_parent"

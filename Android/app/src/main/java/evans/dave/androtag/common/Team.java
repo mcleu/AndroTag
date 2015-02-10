@@ -32,6 +32,9 @@ public class Team implements Scoring {
             players.set(i,GeneralPlayer.NO_PLAYER);
 	}
 
+    public GeneralPlayer getPlayer(int id){
+        return players.get(id);
+    }
 
 	/** Adding/removing players from a team */
 	public synchronized int getNextSlot() {

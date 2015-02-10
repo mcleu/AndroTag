@@ -1,6 +1,9 @@
 package evans.dave.androtag.app;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -59,7 +62,13 @@ public class MainGameActivity extends ActionBarActivity {
     int reloadSoundId;
     int clickSoundId;
 
-    ShieldAudioPlayer shieldAudioPlayer = new ShieldAudioPlayer();
+    /* Serial Management */
+    private final static String DATA_RECEIVED_INTENT = "primavera.arduino.intent.action.DATA_RECEIVED";
+    private final static String SEND_DATA_INTENT = "primavera.arduino.intent.action.SEND_DATA";
+    private final static String DATA_EXTRA = "primavera.arduino.intent.extra.DATA";
+
+    SerialManager serialManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,6 +163,64 @@ public class MainGameActivity extends ActionBarActivity {
                     loadoutButtonClickAuto(v, buttonID);
                 }
             }));
+
+
+            /* Set up Seriallll OH BOY! */
+            serialManager = new SerialManager(this) {
+                @Override
+                void setShield(int val) {
+                    player.update();
+                    player.damage(val);
+                    updateSimpleUI();
+                }
+
+                @Override
+                void tryFire() {
+                }
+
+                @Override
+                void fireSuccess() {
+                    if (player.fire()) {
+                        if (player.getGun().firingSound != 0)
+                            soundPool.play(gunSoundIds[player.activeGun],1,1,1,0,1);
+                    }
+                    updateLoadout();
+                    updateAmmo();
+                }
+
+                @Override
+                void setActive(int val) {
+                    player.swap();
+                    updateLoadout();
+                    updateAmmo();
+                }
+
+                @Override
+                void hitBy(int tid, int pid) {
+                }
+
+                @Override
+                void killedBy(int tid, int pid) {
+                    player.kill(5000);
+                    app.game.getTeam(tid).getPlayer(pid).kills += 1;
+                }
+            };
+
+
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(DATA_RECEIVED_INTENT);
+            registerReceiver(new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    final String action = intent.getAction();
+                    if (DATA_RECEIVED_INTENT.equals(action)) {
+                        final byte[] data = intent.getByteArrayExtra(DATA_EXTRA);
+                        serialManager.addDataCallback(data);
+
+
+                    }
+                }
+            }, filter);
 
         }
 
