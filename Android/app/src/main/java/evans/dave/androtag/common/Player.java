@@ -93,12 +93,14 @@ public class Player extends GeneralPlayer implements Scoring {
 
 	public void update(){
 		// Update shield
+        /*
         long currentTime = System.currentTimeMillis();
 		long timeSinceLastDamage = currentTime-lastDamage;
         long timeSinceLastUpdate = currentTime-lastUpdate;
 		
 		if (shield <100 && timeSinceLastDamage >= SHIELD_DELAY && !isDead())
 			modShield((int) (timeSinceLastUpdate/ MS_PER_SHIELD));
+		*/
 
         lastUpdate = System.currentTimeMillis();
 			

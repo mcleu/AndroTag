@@ -1,0 +1,109 @@
+package evans.dave.androtag.app;
+
+/**
+ * Created by Dave on 09/02/2015.
+ */
+
+
+import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
+
+import java.util.LinkedList;
+
+import evans.dave.androtag.common.SerialMessage;
+
+import static evans.dave.androtag.common.SerialMessage.*;
+
+public abstract class SerialManager {
+
+    private static LinkedList<Byte> inBuffer = new LinkedList<>();
+    private static Context ctx;
+
+	/* Generate code like this:
+    abstract void setShield(int a0, int a1, int a2, int a3);
+	*/
+	
+	/*PYTEMPLATE:FOREACH
+	writeln('abstract void ' + tolowercamel(entry.name) + '(int a0, int a1, int a2, int a3);')
+	*/
+	
+
+    public SerialManager(Context ctx){
+        this.ctx = ctx;
+    }
+
+    public void addDataCallback(byte[] data){
+        // Add the data
+        for (byte b: data){
+            if (FLUSH_SERIAL.equals(b))
+                inBuffer.clear();
+            else
+                inBuffer.addLast(b);
+        }
+
+        parseMessages();
+
+    }
+
+    private boolean parseMessages(){
+        SerialMessage startCode;
+        byte[] packet;
+        while (!inBuffer.isEmpty()){
+
+            // Check the first byte to see if it's a message
+            startCode = SerialMessage.getFromByte(inBuffer.peek());
+
+            if (startCode == null){
+                // Not a known message
+                // Todo: Throw an exception and flush buffer
+                return false;
+            }
+
+            switch (startCode){
+				/* Generate Code like this:
+                case SET_ACTIVE:
+                    packet = parsePacket(4);
+                    if (packet==null)
+                        return false; //Queue not empty
+                    setActive(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInd(packet[4]));
+                    break;
+				*/
+				
+				/*PYTEMPLATE:FOREACH
+				writeln('case ' + touppersplit(entry.name) + ':')
+				writeln('\tpacket = parsePacket(4);')
+				writeln('\tif (packet == null) return false; //Queue not empty')
+				writeln('\t' + tolowercamel(entry.name) + '(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInd(packet[4]));')
+				writeln('\tbreak;\n')
+				*/
+
+
+
+                default:
+                    return false;
+            }
+
+
+        }
+        return true; //Queue is empty
+    }
+
+    private byte[] parsePacket(int num){
+        if (inBuffer.size()>=num) {
+            byte[] data = new byte[num];
+
+            for (int i = 0; i < num; i++)
+                data[i] = inBuffer.removeFirst();
+            return data;
+        } else {
+            return null; // Not enough data, return null
+        }
+    }
+
+    private int toInt(byte b){
+        return (int) b & 0xFF;
+    }
+
+
+}

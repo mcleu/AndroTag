@@ -170,7 +170,7 @@ public class MainGameActivity extends ActionBarActivity {
                 @Override
                 void setShield(int val) {
                     player.update();
-                    player.damage(val);
+                    player.setShield(val);
                     updateSimpleUI();
                 }
 
