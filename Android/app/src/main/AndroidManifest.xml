@@ -19,15 +19,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".app.MainGameActivity"
             android:label="@string/title_activity_main_game"
             android:parentActivityName=".app.MainActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".app.MainActivity" />
@@ -57,10 +55,10 @@
             android:label="@string/title_activity_serial_test"
             android:parentActivityName=".app.MainActivity" >
 
-            <intent-filter>
+            <!--intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter-->
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

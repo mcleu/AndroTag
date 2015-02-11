@@ -8,7 +8,7 @@ public class Player extends GeneralPlayer implements Scoring {
 	final static long SHIELD_DELAY = 3000;
 	final static long MS_PER_SHIELD = 50;
 	
-	protected int shield;
+	public int shield;
 	
 	public int activeGun;
 	public long lastDamage;

@@ -184,8 +184,8 @@ public class Gun {
     }
 	
 	public boolean fire(){
-		if (System.currentTimeMillis() < gunAvailable)
-			return false;
+		//if (System.currentTimeMillis() < gunAvailable)
+		//	return false;
 		if (ammo <=0)
 			return false;
 		

@@ -20,12 +20,14 @@ public abstract class SerialManager {
     private static LinkedList<Byte> inBuffer = new LinkedList<>();
     private static Context ctx;
 
-    abstract void setShield(int val);
-    abstract void tryFire();
-    abstract void fireSuccess();
-    abstract void setActive(int val);
-    abstract void hitBy(int tid, int pid);
-    abstract void killedBy(int tid, int pid);
+    abstract void setShield(int a, int b, int c, int d);
+    abstract void tryFire(int a, int b, int c, int d);
+    abstract void fireSuccess(int a, int b, int c, int d);
+    abstract void tryReload(int a, int b, int c, int d);
+    abstract void reloadSuccess(int a, int b, int c, int d);
+    abstract void setActive(int a, int b, int c, int d);
+    abstract void hitBy(int a, int b, int c, int d);
+    abstract void killedBy(int a, int b, int c, int d);
 
     public SerialManager(Context ctx){
         this.ctx = ctx;
@@ -63,62 +65,63 @@ public abstract class SerialManager {
                 // TODO: Many missing here
 
                 case SET_SHIELD:
-                    packet = parsePacket(3);
+                    packet = parsePacket(4);
                     if (packet==null)
                         return false; //Queue not empty
-                    Toast.makeText(ctx, "SHIELD: "+toInt(packet[1]), Toast.LENGTH_SHORT).show();
-                    setShield(toInt(packet[1]));
+                    setShield(toInt(packet[0]), toInt(packet[1]), toInt(packet[2]), toInt(packet[3]));;
                     break;
 
                 case SET_ACTIVE:
-                    packet = parsePacket(3);
+                    packet = parsePacket(4);
                     if (packet==null)
                         return false; //Queue not empty
-                    Toast.makeText(ctx, "SWAP", Toast.LENGTH_SHORT).show();
-                    setActive(toInt(packet[1]));
+                    setActive(toInt(packet[0]), toInt(packet[1]), toInt(packet[2]), toInt(packet[3]));
                     break;
 
                 case TRY_RELOAD:
-                    packet = parsePacket(2);
+                    packet = parsePacket(4);
                     if (packet==null)
                         return false; //Queue not empty
-                    // TODO: Reloading abstract functions
+                    tryReload(toInt(packet[0]), toInt(packet[1]), toInt(packet[2]), toInt(packet[3]));
                     break;
 
                 case TRY_FIRE:
-                    packet = parsePacket(2);
+                    packet = parsePacket(4);
                     if (packet==null)
                         return false; //Queue not empty
-                    tryFire();
+                    tryFire(toInt(packet[0]), toInt(packet[1]), toInt(packet[2]), toInt(packet[3]));;
                     break;
 
 
                 case FIRE_SUCCESS:
-                    packet = parsePacket(2);
+                    packet = parsePacket(4);
                     if (packet==null)
                         return false; //Queue not empty
-                    Toast.makeText(ctx, "FIRE", Toast.LENGTH_SHORT).show();
-                    fireSuccess();
+                    fireSuccess(toInt(packet[0]), toInt(packet[1]), toInt(packet[2]), toInt(packet[3]));;
+                    break;
+
+                case RELOAD_SUCCESS:
+                    packet = parsePacket(4);
+                    if (packet==null)
+                        return false; //Queue not empty
+                    reloadSuccess(toInt(packet[0]), toInt(packet[1]), toInt(packet[2]), toInt(packet[3]));;
                     break;
 
                 case HIT_BY:
                     packet = parsePacket(4);
                     if (packet==null)
                         return false; //Queue not empty
-                    Toast.makeText(ctx, "HIT: "+toInt(packet[2])+" "+toInt(packet[3]), Toast.LENGTH_SHORT).show();
-                    hitBy(toInt(packet[2]),toInt(packet[3]));
+                    hitBy(toInt(packet[0]), toInt(packet[1]), toInt(packet[2]), toInt(packet[3]));
                     break;
 
                 case KILLED_BY:
                     packet = parsePacket(4);
                     if (packet==null)
                         return false; //Queue not empty
-                    Toast.makeText(ctx, "KILLED: "+toInt(packet[2])+" "+toInt(packet[3]), Toast.LENGTH_SHORT).show();
-                    killedBy(toInt(packet[2]), toInt(packet[3]));
+                    killedBy(toInt(packet[0]), toInt(packet[1]), toInt(packet[2]), toInt(packet[3]));
                     break;
 
                 case ACK:
-                    packet = parsePacket(1);
                     packet = parsePacket(4);
                     if (packet==null)
                         return false; //Queue not empty

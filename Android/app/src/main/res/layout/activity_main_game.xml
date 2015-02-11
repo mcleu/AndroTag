@@ -191,5 +191,19 @@
         android:layout_alignParentStart="true"
         android:background="@color/dt_slate_gray" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/debug"
+            android:textColor="#ffffffff" />
+    </ScrollView>
+
 
 </LinearLayout>

@@ -24,12 +24,71 @@ public class SerialTestActivity extends ActionBarActivity {
     private StringBuilder sb = new StringBuilder();
     TextView text;
 
+
+    SerialManager serialManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_serial_test);
 
         text = (TextView) findViewById(R.id.received_data);
+
+            /* Set up Seriallll OH BOY! */
+        serialManager = new SerialManager(this) {
+            @Override
+            void setShield(int a, int b, int c, int d) {
+                sb.append(String.format("SET_SHIELDS:\t%02x %02x %02x %02x\n",a,b,c,d));
+                text.setText(sb.toString());
+            }
+
+            @Override
+            void tryFire(int a, int b, int c, int d) {
+                sb.append(String.format("TRY_FIRE:\t%02x %02x %02x %02x\n",a,b,c,d));
+                text.setText(sb.toString());
+
+            }
+
+            @Override
+            void fireSuccess(int a, int b, int c, int d) {
+                sb.append(String.format("FIRE_SUCC:\t%02x %02x %02x %02x\n",a,b,c,d));
+                text.setText(sb.toString());
+
+            }
+
+            @Override
+            void tryReload(int a, int b, int c, int d) {
+                
+            }
+
+            @Override
+            void reloadSuccess(int a, int b, int c, int d) {
+
+            }
+
+            @Override
+            void setActive(int a, int b, int c, int d) {
+                sb.append(String.format("SET_ACTIVE:\t%02x %02x %02x %02x\n",a,b,c,d));
+                text.setText(sb.toString());
+
+            }
+
+            @Override
+            void hitBy(int a, int b, int c, int d) {
+                sb.append(String.format("HIT_BY:\t%02x %02x %02x %02x\n",a,b,c,d));
+                text.setText(sb.toString());
+
+            }
+
+            @Override
+            void killedBy(int a, int b, int c, int d) {
+                sb.append(String.format("KILL_BY:\t%02x %02x %02x %02x\n",a,b,c,d));
+                text.setText(sb.toString());
+
+            }
+        };
+
+
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(DATA_RECEIVED_INTENT);
@@ -39,13 +98,8 @@ public class SerialTestActivity extends ActionBarActivity {
                 final String action = intent.getAction();
                 if (DATA_RECEIVED_INTENT.equals(action)) {
                     final byte[] data = intent.getByteArrayExtra(DATA_EXTRA);
-                    for (byte b: data){
-                        if (((int)b)==-128)
-                            sb.append(String.format("\n"));
-                        else
-                            sb.append(String.format("%02X ",b));
-                        text.setText(sb.toString());
-                    }
+                    serialManager.addDataCallback(data);
+
 
                 }
             }
