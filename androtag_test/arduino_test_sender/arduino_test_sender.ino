@@ -27,6 +27,7 @@ void setup(){
 void loop(){
   but_trigger.update();
   if (but_trigger.fell()){
-    send_packet(1,1,1,1,1,1);
+    ir_send_packet(1,1,1,1,1,1);
   }
+  
 }

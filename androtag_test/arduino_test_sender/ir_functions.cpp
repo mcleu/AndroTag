@@ -7,15 +7,13 @@
 #define IR_NEAR_MASK 0b10
 #define IR_OFF_MASK ~(IR_FAR_MASK | IR_NEAR_MASK)
 
-#define PULSEWIDTH 20 //Defined in number of cycles of the IR carrier wave
+#define PULSEWIDTH 30 //Defined in number of cycles of the IR carrier wave
 #define CARRIER_PERIOD 13 //Number of us to keep IR on/off for
 
 /* Very important section for interfacing the IR oscillator interrupt */
 
 volatile int packet_ir_mask = 0;
 volatile int packet_status = IR_EMPTY;
-volatile int packet_ptr = 0;
-#define PACKET_SIZE 32
 volatile long packet_data; // Arduino has 32 bit long
 
 int ir_get_status(){
@@ -45,16 +43,14 @@ void ir_init(){
 	P is adjusted so the packet will always have even parity
 */
 
-void send_packet(int sensor, long gid, long tid, long pid, long gunid, long extras){
+void ir_send_packet(int sensor, long gid, long tid, long pid, long gunid, long extras){
 	
 	// Spin until the last packet is done sending 
 	// if we overwrote anything it would be very very bad
 	while (packet_status == IR_SENDING || packet_status == IR_QUEUED);
 
 	// Set oscillator port mask
-	packet_ir_mask = 0;
-	packet_ir_mask |= (sensor==1 || sensor == 3)? IR_FAR_MASK : 0; 
-	packet_ir_mask |= (sensor==2 || sensor == 3)? IR_NEAR_MASK: 0;
+	packet_ir_mask = sensor & 0b11; // 0: off, 1: near, 2: far, 3: both
 	
 	// Set packet data
 	packet_data = 	( ((long)0b11) << 30) |
@@ -65,48 +61,47 @@ void send_packet(int sensor, long gid, long tid, long pid, long gunid, long extr
 					(extras << 02) |
 					((long)0b01);
 					
-	// Adjust to even parity, getParity returns 0 for even and 1 for odd
+	// Adjust to even parity, getPacketParity returns 0 for even and 1 for odd
 	// TODO: Check that parity is properly done
-	packet_data |= getParity(packet_data) << 1; // Parity bit is second last
-        /*
+	packet_data |= (get_packet_parity(packet_data) << 1); // Parity bit is second last
+        
         int x;
         for (x=31; x>=16; x--)
           Serial.print((packet_data >> x) & 1);
-        Serial.println(' ');
+        Serial.print(' ');
         for (x=15; x>=0; x--)
           Serial.print((packet_data >> x) & 1);
-        Serial.println(' ');*/
-	
-	// Reset packet pointer
-	packet_ptr = 0;
-	
+        Serial.println(' ');
+		
 	// Flag the interrupt to fire the packet
 	packet_status = IR_QUEUED;
 }
 
-void wait_packet(){
+void ir_wait_packet(){
 	while (packet_status == IR_SENDING || packet_status == IR_QUEUED);
 }
 
 
-int getParity(long x){
+int get_packet_parity(long x){
 	x ^= x >> 16;
 	x ^= x >> 8;
 	x ^= x >> 4;
 	x ^= x >> 2;
 	x ^= x >> 1;
-	return (~x) & 1;
+	return x & 1;
 }
 
 /*  Handles all package sending a recieving  */
 // DO NOT MODIFY THE LOCAL VARIABLES BELOW
 boolean osc_isr_state = true;
 int osc_isr_count = 0;
+unsigned long packet_bitmask = 1L<<31;
 void oscillator_isr(){
 	
 	/*-------- Check if a packet has been queued --------*/
 	if (packet_status == IR_QUEUED){
 		// Prep the packet to send
+                packet_bitmask = 1L<<31;
 		packet_status = IR_SENDING;
 		osc_isr_count = 0;
 		osc_isr_state = true;
@@ -117,7 +112,7 @@ void oscillator_isr(){
 	if (packet_status == IR_SENDING) {
 	
 		// Quit if at end of packet
-		if (packet_ptr == PACKET_SIZE){
+		if (packet_bitmask == 0){
 			packet_status = IR_DONE;
 			PORTB &= IR_OFF_MASK; // Just set off
 			return;
@@ -129,7 +124,7 @@ void oscillator_isr(){
 			PORTB &= IR_OFF_MASK; // Low section of code
 		} else {
 			// Check to fire
-			if (osc_isr_state && ((((long)1)<<packet_ptr) & packet_data) ){ // isolates and checkes current bit
+			if (osc_isr_state && ( packet_bitmask & packet_data ) ){ // isolates and checkes current bit
                                 PORTB |= packet_ir_mask; // Sets masked bits
 			}else{
 				PORTB &= IR_OFF_MASK;// Sending a 0
@@ -142,12 +137,17 @@ void oscillator_isr(){
 		
 		// Increment the counter with rollover
 		osc_isr_count++;
-		if (osc_isr_count == 2*PULSEWIDTH+1){
+		if (osc_isr_count >= 2*PULSEWIDTH){
 			osc_isr_count = 0;
                         osc_isr_state = true;
-			packet_ptr++;
+			packet_bitmask  = packet_bitmask >> 1;
 		}
 		
 	}
 }
+
+unsigned long ir_get_mask(){
+  return packet_bitmask;
+}
+
 

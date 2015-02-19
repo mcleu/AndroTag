@@ -8,11 +8,11 @@
 #define IR_EMPTY   3
 
 int ir_get_status();
+unsigned long ir_get_mask();
 void ir_init();
-void send_packet(int sensor, long gid, long tid, long pid, long gunid, long extras);
-void wait_packet();
-int getParity(long x);
+void ir_send_packet(int sensor, long gid, long tid, long pid, long gunid, long extras);
+void ir_wait_packet();
+int get_packet_parity(long x);
 void oscillator_isr();
-
 
 #endif

@@ -4,6 +4,9 @@
 #define IR 10
 #define sensor 2
 
+#define TIMEADJ (2*13*25)
+
+
 void setup(){
   pinMode(IR, OUTPUT);
   pinMode(sensor, INPUT);
@@ -11,26 +14,19 @@ void setup(){
   Timer1.initialize();
   //Timer1.setPeriod(13);
   //Timer1.attachInterrupt(cbf);
-  attachInterrupt(0,hi,FALLING);
+  attachInterrupt(0,ir_sense_isr,FALLING);
 }
 
 long nextmsg = 0;
 volatile int hit = 0;
-volatile int num1 = 0;
-volatile int num2 = 0;
 volatile long diff = 0;
 volatile long buffer[10] = {0,0,0,0,0,0,0,0,0,0};
 void loop(){
-  /*
-  long time = millis();
-  if (time > nextmsg){
-    Serial.println(analogRead(sensor));
-    nextmsg = time + 200;
-  }*/
   if (hit){
     int i;
     for(i = 0; i<10; i++){
-      Serial.print((int) ((float) buffer[i]/562+0.5)); 
+      Serial.print((int) ((float) buffer[i]/TIMEADJ+0.5)); 
+      //Serial.print(buffer[i]); 
       Serial.print(' ');
    }
     Serial.println(' ');
@@ -38,6 +34,18 @@ void loop(){
   }
   
 }
+
+/*
+unsigned long get_packet(int[] buf){
+  int i;
+  unsigned long packet = 0;
+  for (i = 1; i<10; i++){
+    if (!buf[i]){
+      return packet;
+    }
+    
+  }
+}*/
 
 
 volatile int s = 0;
@@ -52,7 +60,7 @@ void cbf(){
 
 volatile long last = 0;
 volatile int ind = 0;
-void hi(){ 
+void ir_sense_isr(){ 
   diff = micros()-last;
   last = micros();
   hit = 1; 
