@@ -1,0 +1,22 @@
+
+
+/* This file defines the serial codes for 
+android<->arduino communication. If you wish to 
+edit this file, change serial_codes.ino.pytemplate
+and re-run the pytemplate generator.
+
+*/
+
+// Header guards
+#ifndef SERIAL_CODES_H
+#define SERIAL_CODES_H
+
+/*PYTEMPLATE:FOREACH
+
+#Only write non-empty entries
+if len(entry.name):
+	writeln("#define\t%-20s\t"%touppersplit(entry.name) + "\t" + entry.id + " // " + entry.desc)
+
+*/
+
+#endif 

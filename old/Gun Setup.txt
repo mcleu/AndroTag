@@ -1,0 +1,37 @@
+
+
+packet timeout -> max time to begin a new packet (> 2*pulse width * packet length)
+pulse width -> width of IR pulses and minimum time between IR pulses (i.e. time between pulses is 2*pulsewidth)
+
+Recieving hits
+
+	Pin interrupt on pin 2 (head) and 3 (body)
+		On RISING_EDGE
+		Record time since last pulse
+		Start new packet if time > timeout
+		Else add to packet
+		Store packet into a block array, so more than one packet can be waiting to be processed at once
+	
+Firing
+
+	No interupt, loop body sets a setFire flag
+	
+	timer interrupt with period pulse delay -> toggles 38KHz timer
+	
+
+PulseWidth timer
+
+	Will cycle through a packet, enabling and disabling the 38KHz timer
+	
+38kHz timer
+	
+	Variable controls 0 (no fire), 1 (fire 1), 2 (fire 2), and 3(fire 12)
+	If Enabled, altrenates the Firing LEDs at 38KHz
+	
+Main loop:
+	process hit events
+	check buttons and set firing flags
+	send serial messages
+	Write to display
+	(Not necessarily in that order)
+	

@@ -15,6 +15,7 @@ import csv
 import re
 from datetime import datetime
 import os
+from os import path
 
 os.chdir("E:\Dropbox\Documents\Code\GitHub\AndroTag\Common\pyTemplate\example")
 
@@ -142,7 +143,7 @@ def runFile(template, protocol):
     
 """ FINALLY, here is the argument handling"""
 if len(sys.argv) is 4:
-    with open(sys.argv[3],'w') as fid:
+    with open(sys.argv[3],'w+') as fid:
         fid.write(runFile(sys.argv[1],sys.argv[2]))
 
 elif len(sys.argv) is 3:
@@ -150,8 +151,8 @@ elif len(sys.argv) is 3:
         print '2 argument invocation requires a .pytemplate file'
         exit(1)
         
-    filename = sys.argv[1][:-11:]
-    with open(filename,'w') as fid:
+    filename = path.abspath(sys.argv[1][:-11:])
+    with open(filename,'w+') as fid:
         fid.write(runFile(sys.argv[1],sys.argv[2]))
     
 else:

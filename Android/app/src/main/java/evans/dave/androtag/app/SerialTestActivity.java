@@ -58,7 +58,7 @@ public class SerialTestActivity extends ActionBarActivity {
 
             @Override
             void tryReload(int a, int b, int c, int d) {
-                
+
             }
 
             @Override
