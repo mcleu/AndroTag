@@ -4,7 +4,7 @@
 #define IR 10
 #define sensor 2
 
-#define TIMEADJ (2*13*25)
+#define TIMEADJ (2*13*30)
 
 
 void setup(){
