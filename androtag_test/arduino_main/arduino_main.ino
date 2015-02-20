@@ -4,6 +4,7 @@
 #include <Bounce2.h>
 #include <TimerOne.h>
 #include "serial_codes.h"
+#include "ir_functions.h"
 
 
 /* --------------------- PIN ASSIGNMENTS --------------------- */
@@ -12,26 +13,27 @@
 //			0
 //			1
 
-// Detection (interruptable)
+// HIT DETECTION (interruptable)
 #define IR_BODY	   	2
 #define IR_HEAD	   	3
 
 // LEDS
-#define IR_FAR		4
-#define IR_NEAR		5
+//#define IR_FAR	8        HARD WIRED
+//#define IR_NEAR	9        HARD WIRED
 #define LED_BODY	A0
 #define LED_GUN		A1
 
 // BUTTONS
-#define BUT_HIT    	6
-#define BUT_FIRE   	7
-#define BUT_SWAP   	8
-#define BUT_RELOAD 	9
+#define PIN_HIT    	4
+#define PIN_FIRE   	5
+#define PIN_SWAP   	6
+#define PIN_RELOAD 	7
 
 // HUD
-#define HUD_LATCH       10
-#define HUD_Q           11
-#define HUD_CLK         12
+// These have been disabled for now
+#define HUD_LATCH       40
+#define HUD_Q           41
+#define HUD_CLK         42
 
 
 
@@ -84,14 +86,14 @@ void setup(){
   pinMode(HUD_Q, OUTPUT);
   
   // Buttons, with pullup
-  pinMode(BUT_HIT, INPUT_PULLUP);
-  pinMode(BUT_FIRE, INPUT_PULLUP);
-  pinMode(BUT_SWAP, INPUT_PULLUP);
-  pinMode(BUT_RELOAD, INPUT_PULLUP);
-  button_hit.attach(BUT_HIT);
-  button_fire.attach(BUT_FIRE);
-  button_swap.attach(BUT_SWAP);
-  button_reload.attach(BUT_RELOAD);
+  pinMode(PIN_HIT, INPUT_PULLUP);
+  pinMode(PIN_FIRE, INPUT_PULLUP);
+  pinMode(PIN_SWAP, INPUT_PULLUP);
+  pinMode(PIN_RELOAD, INPUT_PULLUP);
+  button_hit.attach(PIN_HIT);
+  button_fire.attach(PIN_FIRE);
+  button_swap.attach(PIN_SWAP);
+  button_reload.attach(PIN_RELOAD);
   button_hit.interval(DEBOUNCE_INTERVAL_MS);  
   button_fire.interval(DEBOUNCE_INTERVAL_MS); 
   button_swap.interval(DEBOUNCE_INTERVAL_MS); 
@@ -99,8 +101,13 @@ void setup(){
   
   
   // Initialize ISR for shield shift register
+  /*
   Timer1.initialize(10000); // set a timer for 10k us, or 10ms
   Timer1.attachInterrupt( shiftTimerIsr );
+  */
+  
+  // Initialize ISR for 
+  ir_init();
   
   // Serial setup
   Serial.begin(9600);

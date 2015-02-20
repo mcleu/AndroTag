@@ -1,20 +1,23 @@
 #include <TimerOne.h>
 #include <Arduino.h>
-#include "ir_functions.h"
+#include "ir_sender.h"
 
 // IR Pins are defined as PB0 and PB1 (arduino ping 8 and 9)
 #define IR_FAR_MASK 0b01
 #define IR_NEAR_MASK 0b10
 #define IR_OFF_MASK ~(IR_FAR_MASK | IR_NEAR_MASK)
 
-#define PULSEWIDTH 30 //Defined in number of cycles of the IR carrier wave
-#define CARRIER_PERIOD 13 //Number of us to keep IR on/off for
+
 
 /* Very important section for interfacing the IR oscillator interrupt */
 
 volatile int packet_ir_mask = 0;
 volatile int packet_status = IR_EMPTY;
 volatile long packet_data; // Arduino has 32 bit long
+
+
+void oscillator_isr();
+unsigned long ir_get_mask();
 
 int ir_get_status(){
   return packet_status;
@@ -65,13 +68,8 @@ void ir_send_packet(int sensor, long gid, long tid, long pid, long gunid, long e
 	// TODO: Check that parity is properly done
 	packet_data |= (get_packet_parity(packet_data) << 1); // Parity bit is second last
         
-        int x;
-        for (x=31; x>=16; x--)
-          Serial.print((packet_data >> x) & 1);
-        Serial.print(' ');
-        for (x=15; x>=0; x--)
-          Serial.print((packet_data >> x) & 1);
-        Serial.println(' ');
+        Serial.print("SEND: ");
+        Serial.println(packet_data,BIN);
 		
 	// Flag the interrupt to fire the packet
 	packet_status = IR_QUEUED;
