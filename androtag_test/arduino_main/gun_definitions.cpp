@@ -74,10 +74,19 @@ int solarisOnFire(Gun g);
 int solarisUpdate(Gun g);
 
 
-Gun guns[7] = {lancer, coil, accelerator, shotgun, magnum, pulsar, solaris};
+Gun allGuns[7] = {lancer, coil, accelerator, shotgun, magnum, pulsar, solaris};
 
 Gun getGun(int id){
-    return guns[id%7];   
+    return allGuns[id%7];   
+}
+
+Gun[] getLoadout(int [] ids, int loadoutSize){
+    Gun g[4];
+    int i;
+    for (i=0; i<loadoutSize; i++){
+        g[i] = getGun(ids[i]);
+    }
+    return g;    
 }
 
 
@@ -197,7 +206,7 @@ int stdFire(Gun g){
     g.readyTime = time + g.fireCd;
 	
     // Send an IR packet
-    ir_send_packet(g.fireMode, getGid(), getTid(), getPid(), g.id, 0);
+    ir_send_packet(g.fireMode, gid, tid, pid, g.id, 0);
     
     //TODO: Send serial message
     return 1;
@@ -253,7 +262,7 @@ int acceleratorOnFire(Gun g){
         g.ammo = 0;
         g.readyTime = time + g.fireCd;
     	
-        ir_send_packet(g.fireMode, getGid(), getTid(), getPid(), g.id, 1);
+        ir_send_packet(g.fireMode, gid, tid, pid, g.id, 1);
         //TODO: Send serial message
         return 2;
         
@@ -261,7 +270,7 @@ int acceleratorOnFire(Gun g){
         g.ammo -= 1;
         g.readyTime = time + g.fireCd;
         
-        ir_send_packet(g.fireMode, getGid(), getTid(), getPid(), g.id, 0);
+        ir_send_packet(g.fireMode, gid, tid, pid, g.id, 0);
         //TODO: Send serial message
         return 1;
     }
@@ -318,7 +327,7 @@ int solarisOnFire(Gun g){
     g.readyTime = time + g.fireCd;
 	
     // Send an IR packet
-    ir_send_packet(g.fireMode, getGid(), getTid(), getPid(), g.id, 0);
+    ir_send_packet(g.fireMode, gid, tid, pid, g.id, 0);
     
     //TODO: Send serial message
     

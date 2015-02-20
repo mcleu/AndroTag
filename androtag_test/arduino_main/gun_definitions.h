@@ -51,6 +51,8 @@ typedef struct {
 	int (* hitCBF)(Gun g, int teamsrc, int playersrc, int extras);
 } Gun;
 
+extern Gun allGuns[];
 Gun getGun(int id);
+Gun[] getLoadout(int [] ids, int loadoutSize);
 
 #endif
