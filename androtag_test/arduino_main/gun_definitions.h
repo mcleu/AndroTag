@@ -1,7 +1,10 @@
 
 
+
 #ifndef GUN_DEFINITONS_H
 #define GUN_DEFINITIONS_H
+
+#include "gun.h"
 
 /** GUN CONFIG
 
@@ -21,38 +24,11 @@ hitCBF           Called when a packet is recieved of that gun type
 
 */
 
-
-/* Gun structure definition */
-typedef struct {
-        int id;
-	int ammo;
-	int maxAmmo;
-	int damage;
-
-	long fireCd;
-	long reloadCd;
-
-        int auto;
-        int fireMode;
-        
-	int isReloading;
-	long readyTime;
-	
-	unsigned long extra0; // Random extra storage for "things"
-	unsigned long extra1; // Why not use an array? I want to keep all things static so 
-	unsigned long extra2; // the structures are all the same size (ie. no dynamic allocation/sizing)
-	unsigned long extra3;
-	
-	int (* firePressCBF)(Gun g);
-	int (* fireHoldCBF)(Gun g);
-	int (* fireReleaseCBF)(Gun g);
-	int (* reloadPressCBF)(Gun g);
-        int (* updateCBF) (Gun g);
-	int (* hitCBF)(Gun g, int teamsrc, int playersrc, int extras);
-} Gun;
-
+extern Gun lancer;
+extern Gun accelerator;
+extern Gun solaris;
 extern Gun allGuns[];
 Gun getGun(int id);
-Gun[] getLoadout(int [] ids, int loadoutSize);
+Gun* getLoadout(int ids[], int loadoutSize);
 
 #endif

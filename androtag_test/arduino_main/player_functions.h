@@ -1,7 +1,9 @@
 
-
+#include "gun.h"
 #ifndef PLAYER_FUNCTIONS_H
 #define PLAYER_FUNCTIONS_H
+
+#define writePacket(a,b,c,d) Serial.print(a); Serial.print(' '); Serial.println(b);
 
 
 extern int pid;
@@ -10,8 +12,11 @@ extern int gid;
 extern Gun gun;
 extern unsigned shield;
 
-int deal_damage(int x);
-void writePacket(int a, int b, int c, int d);
+int dealDamage(int x, int teamsrc, int playersrc);
+//void writePacket(int a, int b, int c, int d);
+void setLoadout(int gunids[]);
+
+
 void updateShield();
 void updateRespawn();
 
