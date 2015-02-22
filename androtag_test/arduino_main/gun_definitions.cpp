@@ -81,7 +81,7 @@ Gun lancer = {00,
 Gun coil = {01,
 	100,100,7, // ammo+dmg
 	50, 1000, // timing
-	2, // firemode
+	1, // firemode
 	0,0, // init
 	0,0,0,0, // Last hit time, number of hits in a row
 	noCBF,

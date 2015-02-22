@@ -45,12 +45,6 @@ Bounce button_reload = Bounce();
 
 
 
-/* --------------------- STATIC VARIABLES --------------------- */
-
-#define ENEMY_TEAM       1
-#define ENEMY_PLAYER     1
-
-
 /* ---------------------      SETUP      --------------------- */
 
 void setup(){
@@ -90,14 +84,44 @@ void setup(){
 
 /* ---------------------       LOOP      --------------------- */
 
+
+
 void loop(){
   // TODO: Check Serial
+  updateIRPackets();
   updateRespawn();
   gun->updateCBF(gun);
   updateButtons();
   updateShield();
   
   
+}
+
+
+/* ---------------------   IR RECEIVING   --------------------- */
+unsigned long packet;
+Gun* hitByGun;
+void updateIRPackets(){
+    packet = ir_pop_packet();
+    while (packet!=NO_PACKET){
+        // Check if correct game and correct parity (error checking)
+        if (getPacketGid(packet) == gid && getPacketParity(packet)==0){
+            
+            // Get the gun type firing this packet
+            hitByGun = getGun(getPacketGunid(packet));
+            
+            // Get hit by this gun, given the source and extra information
+            hitByGun->hitCBF(hitByGun,
+                            getPacketTid(packet),
+                            getPacketPid(packet),
+                            getPacketExtras(packet));
+            
+        }
+        
+        // Try to do another packet if we can
+        packet = ir_pop_packet();
+    }
+            
 }
 
 
@@ -118,23 +142,15 @@ void updateButtons(){
         gun->fireReleaseCBF(gun); 
         
     }else if (button_fire.read() == LOW){
-        //Serial.println("Fire HOLD!");
         gun->fireHoldCBF(gun);
     }
     
-    
-    if (button_hit.fell()) {
-        Serial.println("HIT");
-        gun->hitCBF(gun,ENEMY_TEAM,ENEMY_PLAYER,0); 
-    }
-    
+        
     if (button_swap.fell()) {
-        Serial.println("SWAP");
         swap();
     }
     
     if (button_reload.fell()) {
-        Serial.println("RELOAD");
         gun->reloadPressCBF(gun);
     }
   
