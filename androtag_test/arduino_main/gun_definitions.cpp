@@ -13,7 +13,7 @@ RIFLES
   Lancer       Boring rifle
   Solaris      Heat instead of ammo
   Plasma Coil  Deals more damage the more you hit
-  Sonos        Deals damage in a close cone and at a range
+  Buckrifle    Deals damage in a close cone and at a range
   
 HE RIFLES
   Accelerator  Hold to charge for OHKO
@@ -39,6 +39,7 @@ ID Order (so far)
 03	Shotgun
 04	Magnum
 05	Pulsar
+06      Solaris
 
 */
 
@@ -51,13 +52,16 @@ int stdAmmoUpdate(Gun* g);
 int stdFire(Gun* g);
 
 
-/* HEADER, DEFINITIONS BELOW */
-
+/* NONSTANDARD CALLBACKS, DEFINITIONS BELOW */
 int coilOnHit(Gun* g, int teamsrc, int playersrc, int extras);
 
 int acceleratorOnTrigger(Gun* g);
 int acceleratorOnFire(Gun* g);
 int acceleratorOnHit(Gun* g, int teamsrc, int playersrc, int extras);
+
+int shotgunOnFire(Gun* g);
+int shotgunReload(Gun* g);
+int shotgunUpdate(Gun* g);
 
 int pulsarOnHit(Gun* g, int teamsrc, int playersrc, int extras);
 
@@ -89,7 +93,7 @@ Gun coil = {01,
 	noCBF,
 	stdReload,
 	stdAmmoUpdate,
-	coilOnHit //TODO: Change to damage ramp
+	coilOnHit
 	};
 
 Gun accelerator = {02,
@@ -99,7 +103,7 @@ Gun accelerator = {02,
 	0,0,
 	0L-1,0,0,0, // hold time
 	acceleratorOnTrigger, 
-	noCBF, // TODO: Play sound?
+	noCBF,
 	acceleratorOnFire, 
 	stdReload,
 	stdAmmoUpdate, 
@@ -112,11 +116,11 @@ Gun shotgun = {03,
 	2,
 	0,0,
 	0,0,0,0, // last reload
-	stdFire, // TODO: Allow firing as long as there's ammo, i.e. ignore reloading
+	shotgunOnFire,
 	noCBF, 
 	noCBF,
-	stdReload,
-	stdAmmoUpdate, // TODO: Reload a shot if isReloading
+	shotgunReload,
+	shotgunUpdate,
 	stdHit
 	};
 
@@ -125,7 +129,7 @@ Gun magnum = {04,
 	300,1000,
 	1,
 	0,0,
-	0,0,0,0, //team,player,time
+	0,0,0,0, //player,time
 	stdFire, // TODO: Shot overlapping
 	noCBF,
 	noCBF,
@@ -296,6 +300,73 @@ int coilOnHit(Gun* g, int teamsrc, int playersrc, int extras){
     return dealDamage(g->damage + g->extra1/5, teamsrc, playersrc);
 }
 	
+
+/* ------------------------- SHOTGUN ------------------------- */ 
+
+/* Fire, ignoring if we are reloading */
+int shotgunOnFire(Gun* g){
+    long time = millis();
+    if (time < g->readyTime)
+        return 0;
+    
+    if (g->ammo <= 0){
+        writePacket(FIRE_SUCCESS,0,0,0);
+        return 0;
+    }
+    
+    g->isReloading = 0;	
+    g->ammo -= 1;
+    g->readyTime = time + g->fireCd;
+	
+    // Send an IR packet
+    ir_send_packet(g->fireMode, gid, tid, pid, g->id, 0);
+    
+    // Send Serial Message
+    writePacket(FIRE_SUCCESS,1,0,0);
+    writePacket(SET_AMMO,g->ammo,0,0);
+    
+    return 1;
+}
+
+/* Simply set the isreloading flag */
+int shotgunReload(Gun* g){
+  long time = millis();
+  if (time < g->readyTime || g->isReloading)
+    if (g->isReloading)
+      return 0;
+	
+  if (g->ammo == g->maxAmmo)
+    return 0;
+	
+  g->isReloading = 1;
+  g->extra0 = time;
+  
+  writePacket(TRY_RELOAD,1,0,0);
+  return 1;
+}
+
+/* Standard Ammo update that completes a reload */
+int shotgunUpdate(Gun* g){
+  long time = millis();
+  if (g->isReloading){
+      
+      // Add ammo if possible
+      long delta = (time-g->extra0);
+      if (delta >= 900) {
+          g->ammo += 1;
+          writePacket(RELOAD_SUCCESS,1,0,0);
+          writePacket(SET_AMMO,(g->ammo),0,0);
+          g->extra0 = time;
+      }
+      
+      if (g->ammo == g->maxAmmo)
+          g->isReloading = 0;
+          
+      return 1;
+  } 
+  
+  return 0;
+}
 
 /* ------------------------- PULSAR ------------------------- */
 int pulsarOnHit(Gun* g, int teamsrc, int playersrc, int extras){
