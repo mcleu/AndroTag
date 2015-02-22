@@ -12,7 +12,7 @@ int tid;
 
 /* Loadout configuration */
 int num_guns = 7;
-Gun* loadout[7] = {getGun(0),getGun(1),getGun(2),getGun(3),getGun(4),getGun(5),getGun(6)};
+Gun* loadout[4] = {getGun(3),getGun(1),getGun(2),getGun(6)};
 int active_gun = 0;
 
 Gun* gun = loadout[active_gun];
@@ -44,12 +44,12 @@ int dealDamage(int d, int teamsrc, int playersrc){
       
       // Write Kill/hit message to serial
       if (shield == 0){
-        writePacket(KILLED_BY, teamsrc, playersrc, 255); 
+        writePacket(KILLED_BY, teamsrc, playersrc, 0); 
         isDead = 1;
         respawnTime = shield_last_damage + TIME_DEAD;
         return 1;
       } else {
-        writePacket(HIT_BY, teamsrc, playersrc, 255); 
+        writePacket(HIT_BY, teamsrc, playersrc, 0); 
       }
       return 0;
 }
@@ -87,7 +87,7 @@ void updateShield() {
   // Update phone with new value
   if (shieldSend != shield/100){
     shieldSend = shield/100;
-    writePacket(SET_SHIELD, shieldSend, 0, 255);    
+    writePacket(SET_SHIELD, shieldSend, 0, 0);    
   }
 }
 
@@ -121,6 +121,6 @@ void swap(){
     // TODO: Check if trigger is down
     
     active_gun = (active_gun < num_guns-1)?active_gun+1:0;
-    writePacket(SET_ACTIVE, active_gun, 0, 255);
+    writePacket(SET_ACTIVE, active_gun, 0, 0);
     gun = loadout[active_gun];
 }

@@ -174,7 +174,8 @@ public class Gun {
             Gun.getVaporizer(),
             Gun.getBoomstick(),
             Gun.getPhaser(),
-            Gun.getDelta()};
+            Gun.getDelta(),
+            Gun.getSolaris()};
 
     public static final Gun getNewForID(int id){
         for (Gun g : allGuns)
@@ -297,7 +298,7 @@ public class Gun {
                 03,         // Identifier
                 R.drawable.burster,
                 60,         // Damage/shot
-                5,          // Shots/clip
+                6,          // Shots/clip
                 550,        // time(ms)/shot
                 2100,       // time(ms) for reload
                 1,
@@ -327,6 +328,19 @@ public class Gun {
                 40,         // Shots/clip
                 150,        // time(ms)/shot
                 2100,       // time(ms) for reload
+                1,
+                R.raw.delta_fire);         // Firing mode (0 is normal, 1 is burst)
+    }
+
+    public static Gun getSolaris(){
+        return new Gun("Solaris",
+                "A heavy hitting pulse rifle using a heat-based ammunition",
+                06,         // Identifier
+                R.drawable.delta,
+                15,         // Damage/shot
+                100,         // Shots/clip
+                120,        // time(ms)/shot
+                3500,       // time(ms) for reload
                 1,
                 R.raw.delta_fire);         // Firing mode (0 is normal, 1 is burst)
     }

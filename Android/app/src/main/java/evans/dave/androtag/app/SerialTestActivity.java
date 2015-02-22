@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import evans.dave.androtag.R;
 
+import static evans.dave.androtag.common.SerialMessage.FLUSH;
+
 public class SerialTestActivity extends ActionBarActivity {
 
     private final static String DATA_RECEIVED_INTENT = "primavera.arduino.intent.action.DATA_RECEIVED";
@@ -36,6 +38,45 @@ public class SerialTestActivity extends ActionBarActivity {
 
             /* Set up Seriallll OH BOY! */
         serialManager = new SerialManager(this) {
+            @Override
+            protected void addDataCallback(byte[] data){
+                // Add the data
+
+                sb.append("\nINPT:  ");
+                for (byte b: data) {
+                    sb.append(String.format("%02X ", b));
+                }
+                text.setText(sb.toString());
+
+                for (byte b: data){
+                    if (FLUSH.equals(b))
+                        inBuffer.clear();
+                    else
+                        inBuffer.addLast(b);
+                }
+
+
+                sb.append("\nPRE:  ");
+                for (byte b: inBuffer) {
+                    sb.append(String.format("%02X ", b));
+                }
+                text.setText(sb.toString());
+
+                try {
+                    parseMessages();
+                }catch (Exception e){
+                    sb.append("\nERR:  "+e.getMessage());
+                    inBuffer.clear();
+
+                }
+
+                sb.append("\nPOST: ");
+                for (byte b: inBuffer) {
+                    sb.append(String.format("%02X ", b));
+                }
+                text.setText(sb.toString());
+            }
+
             @Override
             void setState(int a0, int a1, int a2, int a3) {
 

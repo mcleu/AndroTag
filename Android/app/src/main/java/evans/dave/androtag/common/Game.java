@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Game extends GameInfo{
     public ArrayList<Team> teams = new ArrayList<>();
     public int loadoutSize;
-    public int[] availableGuns = {0,1,2,3,4,5};
+    public int[] availableGuns = {0,1,2,3,4,5,6};
     public int lives;
     public int maxScore;
 

@@ -28,6 +28,7 @@ import evans.dave.androtag.common.GeneralPlayer;
 import evans.dave.androtag.common.Gun;
 import evans.dave.androtag.common.Player;
 import evans.dave.androtag.common.Scoring;
+import evans.dave.androtag.common.SerialMessage;
 import evans.dave.androtag.common.Team;
 import evans.dave.androtag.common.User;
 
@@ -167,63 +168,12 @@ public class MainGameActivity extends ActionBarActivity {
                 }
             }));
 
+        }
 
-            /* Set up Seriallll OH BOY! */
-            /*
-            serialManager = new SerialManager(this) {
-                @Override
-                void setShield(int w, int val, int y, int z) {
-                    sb.append(String.format("SET_SHIELDS:\t%02x %02x %02x %02x\n",w,val,y,z));
-                    text.setText(sb.toString());
-                    player.shield = val;
-                    shieldText.setText(String.format("%2d", player.shield));
-                    shieldBar.setProgress(player.shield);
-
-                }
-
-                @Override
-                void tryFire(int a, int b, int c, int d) {
-                    sb.append(String.format("TRY_FIRE:\t%02x %02x %02x %02x\n",a,b,c,d));
-                    text.setText(sb.toString());
-                }
-
-                @Override
-                void fireSuccess(int w, int x, int y, int z) {
-                    sb.append(String.format("FIRE_SUCC:\t%02x %02x %02x %02x\n",w,x,y,z));
-                    text.setText(sb.toString());
-                    if (player.fire()) {
-                        if (player.getGun().firingSound != 0)
-                            soundPool.play(gunSoundIds[player.activeGun],1,1,1,0,1);
-                    }
-                    updateLoadout();
-                    updateAmmo();
-                }
-
-                @Override
-                void setActive(int w, int x, int y, int z) {
-                    sb.append(String.format("SET_ACT:\t%02x %02x %02x %02x\n",w,x,y,z));
-                    text.setText(sb.toString());
-                    player.swap();
-                    updateLoadout();
-                    updateAmmo();
-                }
-
-                @Override
-                void hitBy(int w, int x, int y, int z) {
-                    sb.append(String.format("HIT_BY:\t%02x %02x %02x %02x\n",w,x,y,z));
-                    text.setText(sb.toString());
-                }
-
-                @Override
-                void killedBy(int w, int tid, int pid, int z) {
-                    sb.append(String.format("KILL_BY:\t%02x %02x %02x %02x\n",w,tid,pid,z));
-                    text.setText(sb.toString());
-                    player.kill(5000);
-                    app.game.getTeam(tid).getPlayer(pid).kills += 1;
-                }
-            };*/
-
-
+        /* Write config to gun */
+        sendPacket(SerialMessage.SET_NUM_GUNS.getId(), app.loadout.length);
+        for (int i = 0; i<app.loadout.length; i++) {
+            sendPacket(SerialMessage.SET_GUN_0.getId()+i, player.loadout[i].id);
         }
 
         /* Set up Seriallll OH BOY! */
@@ -313,8 +263,10 @@ public class MainGameActivity extends ActionBarActivity {
 
             @Override
             void fireSuccess(int a0, int a1, int a2, int a3) {
-                if (player.getGun().firingSound != 0)
-                    soundPool.play(gunSoundIds[player.activeGun],1,1,1,0,1);
+
+                if (a1!=0)
+                    if (player.getGun().firingSound != 0)
+                        soundPool.play(gunSoundIds[player.activeGun],1,1,1,0,1);
             }
 
             @Override
@@ -386,74 +338,6 @@ public class MainGameActivity extends ActionBarActivity {
 
             }
         };
-        /*
-        serialManager = new SerialManager(this) {
-            @Override
-            void setShield(int a, int b, int c, int d) {
-                sb.append(String.format("SET_SHIELDS:\t%02x %02x %02x %02x\n",a,b,c,d));
-                text.setText(sb.toString());
-                player.shield = b;
-                updateShield();
-            }
-
-            @Override
-            void tryFire(int a, int b, int c, int d) {
-                sb.append(String.format("TRY_FIRE:\t%02x %02x %02x %02x\n",a,b,c,d));
-                text.setText(sb.toString());
-
-            }
-
-            @Override
-            void fireSuccess(int a, int b, int c, int d) {
-                sb.append(String.format("FIRE_SUCC:\t%02x %02x %02x %02x\n",a,b,c,d));
-                text.setText(sb.toString());
-                if (player.fire()) {
-                    if (player.getGun().firingSound != 0)
-                        soundPool.play(gunSoundIds[player.activeGun],1,1,1,0,1);
-                }
-                updateLoadout();
-                updateAmmo();
-
-            }
-
-            @Override
-            void tryReload(int a, int b, int c, int d) {
-            }
-
-            @Override
-            void reloadSuccess(int a, int b, int c, int d) {
-                if (player.reload())
-                    soundPool.play(reloadSoundId,1,1,1,0,1);
-                updateAmmo();
-            }
-
-            @Override
-            void setActive(int a, int b, int c, int d) {
-                sb.append(String.format("SET_ACTIVE:\t%02x %02x %02x %02x\n",a,b,c,d));
-                text.setText(sb.toString());
-                player.swap();
-                updateLoadout();
-                updateAmmo();
-
-            }
-
-            @Override
-            void hitBy(int a, int b, int c, int d) {
-                sb.append(String.format("HIT_BY:\t%02x %02x %02x %02x\n",a,b,c,d));
-                text.setText(sb.toString());
-
-            }
-
-            @Override
-            void killedBy(int a, int b, int c, int d) {
-                sb.append(String.format("KILL_BY:\t%02x %02x %02x %02x\n",a,b,c,d));
-                text.setText(sb.toString());
-                player.kill(5000);
-                app.game.getTeam(b).getPlayer(c).kills += 1;
-
-            }
-        };*/
-
 
 
         IntentFilter filter = new IntentFilter();
@@ -707,10 +591,13 @@ public class MainGameActivity extends ActionBarActivity {
             }
 
         }
-
-
-
-
+    }
+    public void sendPacket(int a0, int a1) { sendPacket((byte) a0,(byte) a1,(byte)0,(byte)0);}
+    public void sendPacket(byte a0, byte a1, byte a2, byte a3) {
+        Intent intent = new Intent(SEND_DATA_INTENT);
+        final byte[] data = {a0,a1,a2,a3};
+        intent.putExtra(DATA_EXTRA, data);
+        sendBroadcast(intent);
     }
 
 

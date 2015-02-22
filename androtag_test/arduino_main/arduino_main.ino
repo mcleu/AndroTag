@@ -87,7 +87,7 @@ void setup(){
 
 
 void loop(){
-  // TODO: Check Serial
+  readSerial();
   updateIRPackets();
   updateRespawn();
   gun->updateCBF(gun);
@@ -154,5 +154,40 @@ void updateButtons(){
         gun->reloadPressCBF(gun);
     }
   
+}
+
+/* ---------------------     SERIAL READ     --------------------- */
+byte a0, a1, a2, a3;
+void readSerial(){
+    while (Serial.available() >= 4){
+        a0 = Serial.read();
+        a1 = Serial.read();
+        a2 = Serial.read();
+        a3 = Serial.read();
+        
+        switch (a0){
+            case SET_GUN_0:
+                loadout[0] = getGun(a1);
+                gun = loadout[active_gun];
+                break;
+            case SET_GUN_1:
+                loadout[1] = getGun(a1);
+                gun = loadout[active_gun];
+                break;
+            case SET_GUN_2:
+                loadout[2] = getGun(a1);
+                gun = loadout[active_gun];
+                break;
+            case SET_GUN_3:
+                loadout[3] = getGun(a1);
+                gun = loadout[active_gun];
+                break;
+            case SET_NUM_GUNS:
+                num_guns = a1;
+                break;
+        }
+                
+        
+    }
 }
 

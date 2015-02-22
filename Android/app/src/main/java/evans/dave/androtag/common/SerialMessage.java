@@ -58,6 +58,8 @@ public enum SerialMessage {
 
     public boolean equals(byte i){ return id==i; }
 
+    public byte getId(){ return id;}
+
     public static SerialMessage getFromByte(byte i){
         for (SerialMessage msg : SerialMessage.values())
             if (msg.equals(i))

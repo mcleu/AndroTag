@@ -26,7 +26,7 @@ import static evans.dave.androtag.common.SerialMessage.*;
 
 public abstract class SerialManager {
 
-    private static LinkedList<Byte> inBuffer = new LinkedList<>();
+    protected static LinkedList<Byte> inBuffer = new LinkedList<>();
     private static Context ctx;
 
 	/* Generate code like this:
@@ -74,7 +74,7 @@ public abstract class SerialManager {
         this.ctx = ctx;
     }
 
-    public void addDataCallback(byte[] data){
+    protected void addDataCallback(byte[] data){
         // Add the data
         for (byte b: data){
             if (FLUSH.equals(b))
@@ -87,13 +87,17 @@ public abstract class SerialManager {
 
     }
 
-    private boolean parseMessages(){
+    protected boolean parseMessages(){
         SerialMessage startCode;
-        byte[] packet;
-        while (!inBuffer.isEmpty()){
+        byte[] packet = new byte[4];
+        while (inBuffer.size()>=4){
 
-            // Check the first byte to see if it's a message
-            startCode = SerialMessage.getFromByte(inBuffer.peek());
+            // Get the packet
+
+            for (int i = 0; i < 4; i++)
+                packet[i] = inBuffer.removeFirst();
+
+            startCode = SerialMessage.getFromByte(packet[0]);
 
             if (startCode == null){
                 // Not a known message
@@ -102,195 +106,125 @@ public abstract class SerialManager {
             }
 
             switch (startCode){
-				/* Generate Code like this:
-                case SET_ACTIVE:
-                    packet = parsePacket(4);
-                    if (packet==null)
-                        return false; //Queue not empty
-                    setActive(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInd(packet[4]));
-                    break;
-				*/
-				
-				
 /* AUTO CODE BEGIN */
 
                 case SET_STATE:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    setState(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    setState(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case SET_LIVES:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    setLives(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    setLives(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case SET_SHIELD:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    setShield(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    setShield(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case SET_RESPAWN:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    setRespawn(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    setRespawn(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case SET_PID:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    setPid(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    setPid(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case SET_TID:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    setTid(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    setTid(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case SET_GID:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    setGid(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    setGid(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case SET_COLOR:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    setColor(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    setColor(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case ADD_ENEMY:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    addEnemy(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    addEnemy(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case CLEAR_ENEMIES:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    clearEnemies(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    clearEnemies(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case SET_NUM_GUNS:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    setNumGuns(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    setNumGuns(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case SET_GUN_0:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    setGun0(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    setGun0(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case SET_GUN_1:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    setGun1(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    setGun1(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case SET_GUN_2:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    setGun2(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    setGun2(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case SET_GUN_3:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    setGun3(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    setGun3(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case TRY_FIRE:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    tryFire(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    tryFire(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case FIRE_SUCCESS:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    fireSuccess(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    fireSuccess(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case TRY_RELOAD:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    tryReload(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    tryReload(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case RELOAD_SUCCESS:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    reloadSuccess(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    reloadSuccess(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case SET_AMMO:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    setAmmo(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    setAmmo(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case SET_ACTIVE:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    setActive(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    setActive(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case NO_LIVES:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    noLives(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    noLives(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case HIT_BY:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    hitBy(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    hitBy(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case KILLED_BY:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    killedBy(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    killedBy(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case SET_START_TIME:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    setStartTime(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    setStartTime(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case SET_END_TIME:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    setEndTime(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    setEndTime(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case END_GAME:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    endGame(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    endGame(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case ACK:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    ack(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    ack(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
 
                 case FLUSH:
-                    packet = parsePacket(4);
-                    if (packet == null) return false; //Queue not empty
-                    flush(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
+                    flush(toInt(packet[0]), toInt(packet[1]),toInt(packet[2]),toInt(packet[3]));
                     break;
-				
-				
-/* AUTO CODE END */
 
+/* AUTO CODE END */
                 default:
                     return false;
             }
@@ -312,7 +246,7 @@ public abstract class SerialManager {
         }
     }
 
-    private int toInt(byte b){
+    protected int toInt(byte b){
         return (int) b & 0xFF;
     }
 
