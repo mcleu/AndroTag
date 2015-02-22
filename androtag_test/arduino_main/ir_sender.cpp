@@ -68,8 +68,8 @@ void ir_send_packet(int sensor, long gid, long tid, long pid, long gunid, long e
 	// TODO: Check that parity is properly done
 	packet_data |= (getPacketParity(packet_data) << 1); // Parity bit is second last
         
-        Serial.print("SEND: ");
-        Serial.println(packet_data,BIN);
+        //Serial.print("SEND: ");
+        //Serial.println(packet_data,BIN);
 		
 	// Flag the interrupt to fire the packet
 	packet_status = IR_QUEUED;

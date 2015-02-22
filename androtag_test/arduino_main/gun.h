@@ -11,7 +11,6 @@ typedef struct Gun {
 	long fireCd;
 	long reloadCd;
 
-        int auto2;
         int fireMode;
         
 	int isReloading;

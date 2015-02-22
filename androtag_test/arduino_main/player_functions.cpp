@@ -11,11 +11,11 @@ int gid;
 int tid;
 
 /* Loadout configuration */
-int num_guns = 3;
-Gun loadout[3] = {getGun(0),getGun(0),getGun(1)};
+int num_guns = 7;
+Gun* loadout[7] = {getGun(0),getGun(1),getGun(2),getGun(3),getGun(4),getGun(5),getGun(6)};
 int active_gun = 0;
 
-Gun gun = loadout[num_guns];
+Gun* gun = loadout[active_gun];
 
 /* Shielding */
 unsigned shield = 10000;
@@ -33,9 +33,13 @@ long respawnTime = 0;
 int dealDamage(int d, int teamsrc, int playersrc){
       
       if (isDead)
-        return 1;  
+        return 0;  
+      
+      dbmsg("Hit for ");
+      dbmsg(d);
+      dbmsg('\n');
   
-      shield = (shield>=1000)?shield-1000:0;
+      shield = (shield>=d*100)?shield-d*100:0;
       shield_last_damage = millis();
       
       // Write Kill/hit message to serial
@@ -43,6 +47,7 @@ int dealDamage(int d, int teamsrc, int playersrc){
         writePacket(KILLED_BY, teamsrc, playersrc, 255); 
         isDead = 1;
         respawnTime = shield_last_damage + TIME_DEAD;
+        return 1;
       } else {
         writePacket(HIT_BY, teamsrc, playersrc, 255); 
       }

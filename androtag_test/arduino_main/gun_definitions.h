@@ -24,11 +24,11 @@ hitCBF           Called when a packet is recieved of that gun type
 
 */
 
+#define AVAILABLE_GUNS 7
+
 extern Gun lancer;
 extern Gun accelerator;
 extern Gun solaris;
-extern Gun allGuns[];
-Gun getGun(int id);
-Gun* getLoadout(int ids[], int loadoutSize);
+Gun* getGun(int id);
 
 #endif

@@ -90,14 +90,12 @@ void setup(){
 
 /* ---------------------       LOOP      --------------------- */
 
-Gun* gaddr = &solaris;
-
 void loop(){
   // TODO: Check Serial
-  //updateRespawn();
-  gaddr->updateCBF(gaddr);
+  updateRespawn();
+  gun->updateCBF(gun);
   updateButtons();
-  //updateShield();
+  updateShield();
   
   
 }
@@ -114,20 +112,20 @@ void updateButtons(){
     
       
     if (button_fire.fell()){
-        gaddr->firePressCBF(gaddr);
+        gun->firePressCBF(gun);
         
     } else if (button_fire.rose()){
-        gaddr->fireReleaseCBF(gaddr); 
+        gun->fireReleaseCBF(gun); 
         
     }else if (button_fire.read() == LOW){
         //Serial.println("Fire HOLD!");
-        gaddr->fireHoldCBF(gaddr);
+        gun->fireHoldCBF(gun);
     }
     
     
     if (button_hit.fell()) {
         Serial.println("HIT");
-        gaddr->hitCBF(gaddr,ENEMY_TEAM,ENEMY_PLAYER,0); 
+        gun->hitCBF(gun,ENEMY_TEAM,ENEMY_PLAYER,0); 
     }
     
     if (button_swap.fell()) {
@@ -137,7 +135,7 @@ void updateButtons(){
     
     if (button_reload.fell()) {
         Serial.println("RELOAD");
-        gaddr->reloadPressCBF(gaddr);
+        gun->reloadPressCBF(gun);
     }
   
 }

@@ -44,7 +44,6 @@ ID Order (so far)
 
 /* STANDARD CALLBACKS */
 int noCBF(Gun* g){return 1;}
-int debugCBF(Gun* g){Serial.println("IN CBF"); return 1;}
 int noCBF(){ return 1; }  
 int stdHit(Gun* g, int teamsrc, int playersrc, int extras);
 int stdReload(Gun* g);
@@ -69,7 +68,7 @@ int solarisUpdate(Gun* g);
 Gun lancer = {00,
 	12,12,20, // ammo + dmg
 	500,1000, // timing
-	0,0,	  // firemode
+	1,	  // firemode
 	0,0,0,0,0,0, // other
 	stdFire, // firePress
 	noCBF, // fireHold
@@ -82,7 +81,7 @@ Gun lancer = {00,
 Gun coil = {01,
 	100,100,7, // ammo+dmg
 	50, 1000, // timing
-	1, 0, // firemode
+	2, // firemode
 	0,0, // init
 	0,0,0,0, // Last hit time, number of hits in a row
 	noCBF,
@@ -96,7 +95,7 @@ Gun coil = {01,
 Gun accelerator = {02,
 	4,4,45,
 	750,2000,
-	0,0,
+	1,
 	0,0,
 	0L-1,0,0,0, // hold time
 	acceleratorOnTrigger, 
@@ -110,7 +109,7 @@ Gun accelerator = {02,
 Gun shotgun = {03,
 	6,6,60,
 	550,2100,
-	0,1,
+	2,
 	0,0,
 	0,0,0,0, // last reload
 	stdFire, // TODO: Allow firing as long as there's ammo, i.e. ignore reloading
@@ -124,7 +123,7 @@ Gun shotgun = {03,
 Gun magnum = {04,
 	100,100,15,
 	300,1000,
-	0,2,
+	1,
 	0,0,
 	0,0,0,0, //team,player,time
 	stdFire, // TODO: Shot overlapping
@@ -138,7 +137,7 @@ Gun magnum = {04,
 Gun pulsar = {05,
 	40,40,12,
 	150,2100,
-	1,1,
+	2,
 	0,0,
 	0,0,0,0,
 	noCBF,
@@ -151,14 +150,14 @@ Gun pulsar = {05,
 
 Gun solaris = {06,
         0,10000,15, // Uses heat
-	150,3000,
-	0,1,
+	120,3500,
+	1,
 	0,0,
 	0,0,0,0, 
-	solarisOnFire, // TODO: HEAT SHOTS
+	solarisOnFire, // HEAT SHOTS WOO
 	noCBF,
 	noCBF,
-	noCBF, // HEAT
+	noCBF, // No reload for this gun
 	solarisUpdate, // Slowly cools down
 	stdHit
 	};
@@ -300,7 +299,7 @@ int coilOnHit(Gun* g, int teamsrc, int playersrc, int extras){
 
 /* ------------------------- PULSAR ------------------------- */
 int pulsarOnHit(Gun* g, int teamsrc, int playersrc, int extras){
-    if (random(2))
+    if (random(2)==1)
         return dealDamage(g->damage, teamsrc, playersrc);
     else
         return 0; 
@@ -319,7 +318,7 @@ int solarisOnFire(Gun* g){
         return 0;
     }
 		
-    g->ammo += 2000;
+    g->ammo += 2200;
     g->extra1 = g->ammo/100;
     g->readyTime = time + g->fireCd;
 	
@@ -369,15 +368,8 @@ int solarisUpdate(Gun* g){
 }
 
 
-Gun allGuns[6] = {lancer, coil, accelerator, shotgun, magnum, pulsar};
+Gun* allGuns[AVAILABLE_GUNS] = {&lancer, &coil, &accelerator, &shotgun, &magnum, &pulsar, &solaris};
 
-Gun getGun(int id){
-    return allGuns[id%6];   
-}
-
-Gun* getLoadout(int ids[], int loadoutSize){
-    Gun g[loadoutSize];
-    int i;
-    for (i=0; i<loadoutSize; i++)
-        g[i] = getGun(ids[i]);
+Gun* getGun(int id){
+    return allGuns[id%AVAILABLE_GUNS]; 
 }
