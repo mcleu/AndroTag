@@ -60,6 +60,8 @@ public class Player extends GeneralPlayer implements Scoring {
 	public void swap() {
         activeGun = (activeGun+1)%loadout.length;
 	}
+
+    public void swap(int id){activeGun = (id)%loadout.length;}
 	
 	public boolean reload() {
         return getGun().reload();

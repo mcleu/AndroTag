@@ -291,9 +291,6 @@ public abstract class SerialManager {
 				
 /* AUTO CODE END */
 
-
-
-
                 default:
                     return false;
             }

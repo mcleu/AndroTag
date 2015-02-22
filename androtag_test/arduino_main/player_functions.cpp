@@ -93,7 +93,7 @@ void updateShield() {
 
 
 /** XXXXXXXXXXXXXXXXXXXXXXX OTHER THINGS XXXXXXXXXXXXXXXXXXXXXXXXX **/
-/*
+
 byte outBuffer[] = {0,0,0,0,0};
 void writePacket(int a, int b, int c, int d){
 	outBuffer[0] = a;
@@ -102,7 +102,7 @@ void writePacket(int a, int b, int c, int d){
 	outBuffer[3] = d;
 	Serial.write(outBuffer,4);
 	Serial.flush();
-}*/
+}
 
 
 /** XXXXXXXXXXXXXXXXXXXXXXX RESPAWN UPDATING XXXXXXXXXXXXXXXXXXXXXXXXX **/

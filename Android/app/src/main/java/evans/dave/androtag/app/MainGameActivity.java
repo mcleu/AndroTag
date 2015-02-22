@@ -229,6 +229,166 @@ public class MainGameActivity extends ActionBarActivity {
         /* Set up Seriallll OH BOY! */
         serialManager = new SerialManager(this) {
             @Override
+            void setState(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setLives(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setShield(int a0, int a1, int a2, int a3) {
+                sb.append(String.format("SET_SHIELDS:\t%02x %02x %02x %02x\n",a0,a1,a2,a3));
+                text.setText(sb.toString());
+                player.shield = a1;
+                updateShield();
+            }
+
+            @Override
+            void setRespawn(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setPid(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setTid(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setGid(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setColor(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void addEnemy(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void clearEnemies(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setNumGuns(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setGun0(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setGun1(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setGun2(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setGun3(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void tryFire(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void fireSuccess(int a0, int a1, int a2, int a3) {
+                if (player.getGun().firingSound != 0)
+                    soundPool.play(gunSoundIds[player.activeGun],1,1,1,0,1);
+            }
+
+            @Override
+            void tryReload(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void reloadSuccess(int a0, int a1, int a2, int a3) {
+                if (a1 != 0)
+                    soundPool.play(reloadSoundId,1,1,1,0,1);
+            }
+
+            @Override
+            void setAmmo(int a0, int a1, int a2, int a3) {
+                player.getGun().ammo = a1;
+                updateAmmo();
+            }
+
+            @Override
+            void setActive(int a0, int a1, int a2, int a3) {
+                player.swap(a1);
+                updateAmmo();
+                updateLoadout();
+
+            }
+
+            @Override
+            void noLives(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void hitBy(int a0, int a1, int a2, int a3) {
+                sb.append(String.format("HIT_BY:\t%02x %02x %02x %02x\n",a0,a1,a2,a3));
+                text.setText(sb.toString());
+            }
+
+            @Override
+            void killedBy(int a0, int a1, int a2, int a3) {
+                sb.append(String.format("KILLED_BY:\t%02x %02x %02x %02x\n",a0,a1,a2,a3));
+                text.setText(sb.toString());
+                app.game.getTeam(a1).getPlayer(a2).kills += 1;
+                player.kill(5000);
+            }
+
+            @Override
+            void setStartTime(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setEndTime(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void endGame(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void ack(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void flush(int a0, int a1, int a2, int a3) {
+
+            }
+        };
+        /*
+        serialManager = new SerialManager(this) {
+            @Override
             void setShield(int a, int b, int c, int d) {
                 sb.append(String.format("SET_SHIELDS:\t%02x %02x %02x %02x\n",a,b,c,d));
                 text.setText(sb.toString());
@@ -292,7 +452,7 @@ public class MainGameActivity extends ActionBarActivity {
                 app.game.getTeam(b).getPlayer(c).kills += 1;
 
             }
-        };
+        };*/
 
 
 

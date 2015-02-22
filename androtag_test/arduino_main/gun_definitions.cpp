@@ -285,7 +285,7 @@ int coilOnHit(Gun* g, int teamsrc, int playersrc, int extras){
     // Check timing
     unsigned long time = millis();
     
-    if (time-g->extra0 > 400){
+    if (time-g->extra0 < 400){
         // Hit in a 400ms window, increase damage!
         g->extra1 += (g->extra1==20)?0:1; //Cap at 20 stacks
     } else {

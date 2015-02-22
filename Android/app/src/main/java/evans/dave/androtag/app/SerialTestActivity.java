@@ -37,53 +37,147 @@ public class SerialTestActivity extends ActionBarActivity {
             /* Set up Seriallll OH BOY! */
         serialManager = new SerialManager(this) {
             @Override
-            void setShield(int a, int b, int c, int d) {
-                sb.append(String.format("SET_SHIELDS:\t%02x %02x %02x %02x\n",a,b,c,d));
-                text.setText(sb.toString());
-            }
-
-            @Override
-            void tryFire(int a, int b, int c, int d) {
-                sb.append(String.format("TRY_FIRE:\t%02x %02x %02x %02x\n",a,b,c,d));
-                text.setText(sb.toString());
+            void setState(int a0, int a1, int a2, int a3) {
 
             }
 
             @Override
-            void fireSuccess(int a, int b, int c, int d) {
-                sb.append(String.format("FIRE_SUCC:\t%02x %02x %02x %02x\n",a,b,c,d));
-                text.setText(sb.toString());
+            void setLives(int a0, int a1, int a2, int a3) {
 
             }
 
             @Override
-            void tryReload(int a, int b, int c, int d) {
+            void setShield(int a0, int a1, int a2, int a3) {
 
             }
 
             @Override
-            void reloadSuccess(int a, int b, int c, int d) {
+            void setRespawn(int a0, int a1, int a2, int a3) {
 
             }
 
             @Override
-            void setActive(int a, int b, int c, int d) {
-                sb.append(String.format("SET_ACTIVE:\t%02x %02x %02x %02x\n",a,b,c,d));
-                text.setText(sb.toString());
+            void setPid(int a0, int a1, int a2, int a3) {
 
             }
 
             @Override
-            void hitBy(int a, int b, int c, int d) {
-                sb.append(String.format("HIT_BY:\t%02x %02x %02x %02x\n",a,b,c,d));
-                text.setText(sb.toString());
+            void setTid(int a0, int a1, int a2, int a3) {
 
             }
 
             @Override
-            void killedBy(int a, int b, int c, int d) {
-                sb.append(String.format("KILL_BY:\t%02x %02x %02x %02x\n",a,b,c,d));
-                text.setText(sb.toString());
+            void setGid(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setColor(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void addEnemy(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void clearEnemies(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setNumGuns(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setGun0(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setGun1(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setGun2(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setGun3(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void tryFire(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void fireSuccess(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void tryReload(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void reloadSuccess(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setAmmo(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setActive(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void noLives(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void hitBy(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void killedBy(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setStartTime(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void setEndTime(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void endGame(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void ack(int a0, int a1, int a2, int a3) {
+
+            }
+
+            @Override
+            void flush(int a0, int a1, int a2, int a3) {
 
             }
         };
