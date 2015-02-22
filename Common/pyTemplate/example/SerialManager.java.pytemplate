@@ -37,7 +37,7 @@ public abstract class SerialManager {
     public void addDataCallback(byte[] data){
         // Add the data
         for (byte b: data){
-            if (FLUSH_SERIAL.equals(b))
+            if (FLUSH.equals(b))
                 inBuffer.clear();
             else
                 inBuffer.addLast(b);
@@ -67,7 +67,7 @@ public abstract class SerialManager {
                     packet = parsePacket(4);
                     if (packet==null)
                         return false; //Queue not empty
-                    setActive(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInd(packet[4]));
+                    setActive(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInt(packet[4]));
                     break;
 				*/
 				
