@@ -1,0 +1,34 @@
+package evans.dave.androtag.common;
+
+/**
+ * Created by Dave on 09/02/2015.
+ */
+public enum SerialMessage {
+	
+	/*PYTEMPLATE:FOREACH
+	
+	#Only write non-empty entries
+	if len(entry.name):
+		writeln("%s (%s),//%s"%(touppersplit(entry.name),entry.id,entry.desc))
+	
+	*/
+
+    private final byte id;
+
+    SerialMessage(int id){
+        this.id = (byte) id;
+    }
+
+    public boolean equals(byte i){ return id==i; }
+
+    public static SerialMessage getFromByte(byte i){
+        for (SerialMessage msg : SerialMessage.values())
+            if (msg.equals(i))
+                return msg; // return it
+        return null; // Not a message
+    }
+
+
+
+
+}

@@ -25,7 +25,8 @@ public abstract class SerialManager {
 	*/
 	
 	/*PYTEMPLATE:FOREACH
-	writeln('abstract void ' + tolowercamel(entry.name) + '(int a0, int a1, int a2, int a3);')
+	if len(entry.name):
+		writeln('abstract void ' + tolowercamel(entry.name) + '(int a0, int a1, int a2, int a3);')
 	*/
 	
 
@@ -71,11 +72,12 @@ public abstract class SerialManager {
 				*/
 				
 				/*PYTEMPLATE:FOREACH
-				writeln('case ' + touppersplit(entry.name) + ':')
-				writeln('\tpacket = parsePacket(4);')
-				writeln('\tif (packet == null) return false; //Queue not empty')
-				writeln('\t' + tolowercamel(entry.name) + '(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInd(packet[4]));')
-				writeln('\tbreak;\n')
+				if len(entry.name):
+					writeln('case ' + touppersplit(entry.name) + ':')
+					writeln('\tpacket = parsePacket(4);')
+					writeln('\tif (packet == null) return false; //Queue not empty')
+					writeln('\t' + tolowercamel(entry.name) + '(toInt(packet[1]), toInt(packet[2]),toInt(packet[3]),toInd(packet[4]));')
+					writeln('\tbreak;\n')
 				*/
 
 
