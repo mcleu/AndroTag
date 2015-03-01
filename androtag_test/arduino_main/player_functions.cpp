@@ -93,7 +93,7 @@ void updateShield() {
 
 
 /** XXXXXXXXXXXXXXXXXXXXXXX OTHER THINGS XXXXXXXXXXXXXXXXXXXXXXXXX **/
-
+#ifndef VERBOSE_SERIAL
 byte outBuffer[] = {0,0,0,0,0};
 void writePacket(int a, int b, int c, int d){
 	outBuffer[0] = a;
@@ -103,6 +103,7 @@ void writePacket(int a, int b, int c, int d){
 	Serial.write(outBuffer,4);
 	Serial.flush();
 }
+#endif
 
 
 /** XXXXXXXXXXXXXXXXXXXXXXX RESPAWN UPDATING XXXXXXXXXXXXXXXXXXXXXXXXX **/
