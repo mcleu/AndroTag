@@ -9,6 +9,7 @@
 #include "ir_sender.h"
 #include "ir_receiver.h"
 #include "gun.h"
+#include "game.h"
 
 
 /* --------------------- PIN ASSIGNMENTS --------------------- */
@@ -105,8 +106,13 @@ void updateIRPackets(){
     packet = ir_pop_packet();
     while (packet!=NO_PACKET){
         // Check if correct game and correct parity (error checking)
-        if (getPacketGid(packet) == gid && getPacketParity(packet)==0){
-            
+        if (getPacketGid(packet) == gid && 
+			getPacketParity(packet)==0 &&
+			isEnemy(getPacketTid(packet) &&
+			game_state == GAME_RUNNING &&
+			!isDead &&
+			!isDisabled){
+		
             // Get the gun type firing this packet
             hitByGun = getGun(getPacketGunid(packet));
             
@@ -134,25 +140,27 @@ void updateButtons(){
     button_swap.update();
     button_reload.update();
     
-      
-    if (button_fire.fell()){
-        gun->firePressCBF(gun);
-        
-    } else if (button_fire.rose()){
-        gun->fireReleaseCBF(gun); 
-        
-    }else if (button_fire.read() == LOW){
-        gun->fireHoldCBF(gun);
-    }
     
-        
-    if (button_swap.fell()) {
-        swap();
-    }
-    
-    if (button_reload.fell()) {
-        gun->reloadPressCBF(gun);
-    }
+	if (!isDead || !isDisabled) {
+		if (button_fire.fell()){
+			gun->firePressCBF(gun);
+			
+		} else if (button_fire.rose()){
+			gun->fireReleaseCBF(gun); 
+			
+		}else if (button_fire.read() == LOW){
+			gun->fireHoldCBF(gun);
+		}
+		
+			
+		if (button_swap.fell()) {
+			swap();
+		}
+		
+		if (button_reload.fell()) {
+			gun->reloadPressCBF(gun);
+		}
+	}
   
 }
 
@@ -185,6 +193,49 @@ void readSerial(){
             case SET_NUM_GUNS:
                 num_guns = a1;
                 break;
+			case SET_PID:
+				pid = a1;
+				break;
+			case SET_TID:
+				tid = a1;
+				break;
+			case SET_GID:
+				gid = a1;
+				break;
+			case SET_COLOR:
+				color_r = a1;
+				color_g = a2;
+				color_b = a3;
+				break;
+			case ADD_ENEMY:
+				addEnemy(a1);
+				break;
+			case CLEAR_ENEMY:
+				clearEnemies();
+				break;
+			case SET_START_TIME:
+				setStartTime(((long)a1<<15) ||  ((long)a2)<<7 ||  ((long)a3));
+				break;
+			case SET_END_TIME:
+				setStartTime(((long)a1<<15) ||  ((long)a2)<<7 ||  ((long)a3));
+				break;
+			case END_GAME:
+				endGame();
+				break;
+			case SET_STATE:
+				if (a1==0){
+					isDisabled = false;
+				else {
+					isDisabled = true;
+				}
+				break;
+			case SET_LIVES:
+				#TODO: Modify lives
+				break;
+			default:
+				#SOMETHING WENT WRONG, flush the serial stream
+				writePacket(FLUSH,FLUSH,FLUSH,FLUSH);
+			
         }
                 
         
