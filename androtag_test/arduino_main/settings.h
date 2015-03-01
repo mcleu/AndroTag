@@ -6,3 +6,8 @@
 
 /*RESPAWN PARAMETERS */
 #define TIME_DEAD 5000 //ms
+
+/* DEBUGGING */
+#define VERBOSE_SERIAL
+#define DEBUG 0
+#define dbmsg(msg) if (DEBUG) {Serial.print(msg);}

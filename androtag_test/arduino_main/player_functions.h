@@ -1,11 +1,8 @@
 
 #include "gun.h"
+#include "settings.h"
 #ifndef PLAYER_FUNCTIONS_H
 #define PLAYER_FUNCTIONS_H
-
-#define DEBUG 0
-#define VERBOSE_SERIAL
-#define dbmsg(msg) if (DEBUG) {Serial.print(msg);}
 
 extern int num_guns;
 extern int active_gun;
