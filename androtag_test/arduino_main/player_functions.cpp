@@ -147,3 +147,12 @@ void clearEnemies(){
 	for (i = 0; i< 16; i++)
 		enemies[i] = false;
 }
+
+
+/** XXXXXXXXXXXXXXXXXXXXXXX COLOR CONTROL XXXXXXXXXXXXXXXXXXXXXXXXX **/
+
+void setColor(byte r, byte g, byte b){
+    color_r = r;
+    color_g = g;
+    color_b = b;   
+}

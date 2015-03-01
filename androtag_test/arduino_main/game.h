@@ -14,6 +14,7 @@ extern int gid;
 void setGameStart(unsigned long time);
 void setGameEnd(unsigned long time);
 void setGameState(int state);
+int getGameState();
 void updateGame();
 
 

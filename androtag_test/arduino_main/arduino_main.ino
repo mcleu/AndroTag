@@ -107,8 +107,8 @@ void updateIRPackets(){
         // Check if correct game and correct parity (error checking)
         if (getPacketGid(packet) == gid && 
 			getPacketParity(packet)==0 &&
-			isEnemy(getPacketTid(packet) &&
-			game_state == GAME_RUNNING &&
+			isEnemy(getPacketTid(packet)) &&
+			getGameState() == GAME_RUNNING &&
 			!isDead &&
 			!isDisabled){
 		
@@ -200,29 +200,29 @@ void readSerial(){
                 gid = a1;
                 break;
             case SET_COLOR:
-                color_r = a1;
-                color_g = a2;
-                color_b = a3;
+                setColor(a1,a2,a3);
+                //TODO: pinout setting?
                 break;
             case ADD_ENEMY:
                 addEnemy(a1);
                 break;
-            case CLEAR_ENEMY:
+            case CLEAR_ENEMIES:
                 clearEnemies();
                 break;
             case SET_START_TIME:
-                setStartTime(((long)a1<<15) ||  ((long)a2)<<7 ||  ((long)a3));
+                setGameStart(((long)a1<<15) ||  ((long)a2)<<7 ||  ((long)a3));
                 break;
             case SET_END_TIME:
-                setStartTime(((long)a1<<15) ||  ((long)a2)<<7 ||  ((long)a3));
+                setGameEnd(((long)a1<<15) ||  ((long)a2)<<7 ||  ((long)a3));
                 break;
             case END_GAME:
-                endGame();
+                //TODO: Other end code
+                setGameState(GAME_ENDED);
                 break;
             case SET_STATE:
                 if (a1==0){
                     isDisabled = false;
-                else {
+                } else {
                     isDisabled = true;
                 }
                 break;
@@ -232,7 +232,7 @@ void readSerial(){
             default:
                 //SOMETHING WENT WRONG, flush the serial stream
                 //writePacket(FLUSH,FLUSH,FLUSH,FLUSH);
-			
+		break;	
         }
                 
         

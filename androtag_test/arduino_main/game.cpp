@@ -1,7 +1,8 @@
 
 
 #include "game.h"
-#include "player_functions.g"
+#include "player_functions.h"
+#include <Arduino.h>
 
 int gid = 255;
 unsigned long game_start_time = 0;
@@ -9,6 +10,9 @@ unsigned long game_end_time = 0;
 
 int game_state = GAME_DISABLED;
 
+int getGameState(){
+    return game_state;
+}
 void setGameState(int state){
     game_state = state;
 }
@@ -22,6 +26,7 @@ void setGameEnd(unsigned long time){
     game_end_time = time;
     updateGame();
 }
+
 
 void endGame(){
     game_state = GAME_DISABLED;
@@ -37,7 +42,7 @@ void updateGame(){
         } else if (time >= game_end_time){
             game_state = GAME_ENDED;
         } else {
-            game = GAME_DISABLED;
+            game_state = GAME_DISABLED;
         } 
     }
 }
