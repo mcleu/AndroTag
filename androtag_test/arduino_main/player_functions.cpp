@@ -5,9 +5,13 @@
 #include "settings.h"
 #include <Arduino.h>
 
+/* Color Information */
+byte color_r = 1;
+byte color_b = 0;
+byte color_g = 0;
+
 /* Player slot information */
 int pid;
-int gid;
 int tid;
 
 /* Loadout configuration */
@@ -24,8 +28,11 @@ long shield_last_update = 0;
 
 /* Respawning */
 int isDead = 0;
+int isDisabled = 0;
 long respawnTime = 0;
 
+/* Enemies */
+boolean enemies[16];
 
 
 /** XXXXXXXXXXXXXXXXXXXXXXX Damage Function XXXXXXXXXXXXXXXXXXXXXXXXX **/
@@ -50,8 +57,8 @@ int dealDamage(int d, int teamsrc, int playersrc){
         return 1;
       } else {
         writePacket(HIT_BY, teamsrc, playersrc, 0); 
+		return 0;
       }
-      return 0;
 }
 
 
@@ -94,6 +101,7 @@ void updateShield() {
 
 /** XXXXXXXXXXXXXXXXXXXXXXX OTHER THINGS XXXXXXXXXXXXXXXXXXXXXXXXX **/
 
+#ifdef DEBUG
 byte outBuffer[] = {0,0,0,0,0};
 void writePacket(int a, int b, int c, int d){
 	outBuffer[0] = a;
@@ -103,6 +111,7 @@ void writePacket(int a, int b, int c, int d){
 	Serial.write(outBuffer,4);
 	Serial.flush();
 }
+#endif
 
 
 /** XXXXXXXXXXXXXXXXXXXXXXX RESPAWN UPDATING XXXXXXXXXXXXXXXXXXXXXXXXX **/
@@ -123,4 +132,19 @@ void swap(){
     active_gun = (active_gun < num_guns-1)?active_gun+1:0;
     writePacket(SET_ACTIVE, active_gun, 0, 0);
     gun = loadout[active_gun];
+}
+
+
+/** XXXXXXXXXXXXXXXXXXXXXXX ENEMY CONTROL XXXXXXXXXXXXXXXXXXXXXXXXX **/
+
+void addEnemy(byte tid){
+	enemies[tid] = true;
+}
+boolean isEnemy(byte tid){
+	return enemies[tid%16];
+}
+void clearEnemies(){
+	int i;
+	for (i = 0; i< 16; i++)
+		enemies[i] = false;
 }
