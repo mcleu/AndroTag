@@ -175,6 +175,9 @@ public class MainGameActivity extends ActionBarActivity {
         for (int i = 0; i<app.loadout.length; i++) {
             sendPacket(SerialMessage.SET_GUN_0.getId()+i, player.loadout[i].id);
         }
+        sendPacket(SerialMessage.SET_GID.getId(), app.game.id);
+        sendPacket(SerialMessage.SET_TID.getId(), app.game.getTeamID(player.team));
+        sendPacket(SerialMessage.SET_PID.getId(), player.getID());
 
         /* Set up Seriallll OH BOY! */
         serialManager = new SerialManager(this) {
