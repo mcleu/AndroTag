@@ -4,6 +4,7 @@
 #include "ir_sender.h"
 #include "player_functions.h"
 #include "serial_codes.h"
+#include "game.h"
 
 /** GUN DEFINITIONS
 

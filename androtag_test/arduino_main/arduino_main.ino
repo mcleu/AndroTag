@@ -89,6 +89,7 @@ void setup(){
 void loop(){
   readSerial();
   updateIRPackets();
+  updateGame();
   updateRespawn();
   gun->updateCBF(gun);
   updateButtons();
@@ -105,15 +106,21 @@ void updateIRPackets(){
     packet = ir_pop_packet();
     while (packet!=NO_PACKET){
         // Check if correct game and correct parity (error checking)
-        if (getPacketGid(packet) == gid && 
+        if (getPacketGid(packet) == gid  && 
 			getPacketParity(packet)==0 &&
 			isEnemy(getPacketTid(packet)) &&
 			getGameState() == GAME_RUNNING &&
 			!isDead &&
-			!isDisabled){
+			!isDisabled
+                        ){
 		
             // Get the gun type firing this packet
             hitByGun = getGun(getPacketGunid(packet));
+            
+            #ifdef DEBUG_RECV
+            Serial.print("RECV: ");
+            Serial.println(packet,BIN);
+            #endif
             
             // Get hit by this gun, given the source and extra information
             hitByGun->hitCBF(hitByGun,
@@ -210,10 +217,10 @@ void readSerial(){
                 clearEnemies();
                 break;
             case SET_START_TIME:
-                setGameStart(((long)a1<<15) ||  ((long)a2)<<7 ||  ((long)a3));
+                setGameStart(((long)a1<<15) |  ((long)a2)<<7 |  ((long)a3));
                 break;
             case SET_END_TIME:
-                setGameEnd(((long)a1<<15) ||  ((long)a2)<<7 ||  ((long)a3));
+                setGameEnd(((long)a1<<15) |  ((long)a2)<<7 |  ((long)a3));
                 break;
             case END_GAME:
                 //TODO: Other end code

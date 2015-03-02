@@ -9,5 +9,7 @@
 
 /* DEBUGGING */
 #define VERBOSE_SERIAL
+#define DEBUG_SEND
+#define DEBUG_RECV
 #define DEBUG 0
 #define dbmsg(msg) if (DEBUG) {Serial.print(msg);}
