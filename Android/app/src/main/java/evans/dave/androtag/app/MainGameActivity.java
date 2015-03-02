@@ -27,12 +27,13 @@ import evans.dave.androtag.common.Gun;
 import evans.dave.androtag.common.Player;
 import evans.dave.androtag.common.Scoring;
 import evans.dave.androtag.common.SerialMessage;
+import static evans.dave.androtag.common.SerialMessage.*;
 import evans.dave.androtag.common.Team;
 
 
 public class MainGameActivity extends ActionBarActivity {
 
-    private int ui_update_interval = 100;
+    private int ui_update_interval = 500;
     private Handler updateHandler;
 
     AndrotagApplication app;
@@ -165,13 +166,35 @@ public class MainGameActivity extends ActionBarActivity {
         }
 
         /* Write config to gun */
-        sendPacket(SerialMessage.SET_NUM_GUNS.getId(), app.loadout.length);
-        for (int i = 0; i<app.loadout.length; i++) {
-            sendPacket(SerialMessage.SET_GUN_0.getId()+i, player.loadout[i].id);
+
+        // Loadout
+        sendPacket(SET_NUM_GUNS.getId(), app.loadout.length);
+        switch(app.loadout.length){
+            // NOTE: This uses case fall-through
+            case 4:
+                sendPacket(SET_GUN_3,player.loadout[3].id);
+            case 3:
+                sendPacket(SET_GUN_2,player.loadout[2].id);
+            case 2:
+                sendPacket(SET_GUN_1,player.loadout[1].id);
+            case 1:
+                sendPacket(SET_GUN_0,player.loadout[0].id);
+                break;
         }
-        sendPacket(SerialMessage.SET_GID.getId(), app.game.id);
-        sendPacket(SerialMessage.SET_TID.getId(), app.game.getTeamID(player.team));
-        sendPacket(SerialMessage.SET_PID.getId(), player.getID());
+
+        // Identifiers
+        sendPacket(SET_GID, app.game.id);
+        sendPacket(SET_TID, app.game.getTeamID(player.team));
+        sendPacket(SET_PID, player.getID());
+
+        // Enemy List
+        sendPacket(CLEAR_ENEMIES);
+        for (Team team : app.game.teams)
+                if (team != player.team)
+                    sendPacket(ADD_ENEMY,app.game.getTeamID(team));
+
+        // TODO: Game time
+        // TODO: Send to waiting state
 
         /* Set up Seriallll OH BOY! */
         serialManager = new SerialManager(this) {
@@ -180,47 +203,57 @@ public class MainGameActivity extends ActionBarActivity {
 
                 switch (SerialMessage.getFromByte((byte) a0)){
                     case SET_SHIELD:
-                        sb.append(String.format("SET_SHIELDS:\t%02x %02x %02x %02x\n",a0,a1,a2,a3));
-                        text.setText(sb.toString());
+                        sb.append("SHLD: ");
                         player.shield = a1;
                         updateShield();
+                        // TODO: Move this to server connection
+                        if (a1==100)
+                            scoreboardAdapter.notifyDataSetChanged();
                         break;
 
                     case FIRE_SUCCESS:
+                        sb.append("FIRE: ");
                         if (a1!=0)
                             if (player.getGun().firingSound != 0)
                                 soundPool.play(gunSoundIds[player.activeGun],1,1,1,0,1);
                         break;
 
                     case RELOAD_SUCCESS:
+                        sb.append("RELD: ");
                         if (a1 != 0)
                             soundPool.play(reloadSoundId,1,1,1,0,1);
                         break;
 
                     case SET_ACTIVE:
+                        sb.append("GUN:  ");
                         player.swap(a1);
                         updateAmmo();
                         updateLoadout();
                         break;
 
                     case SET_AMMO:
+                        sb.append("AMMO: ");
                         player.getGun().ammo = a1;
                         updateAmmo();
                         break;
 
                     case HIT_BY:
-                        sb.append(String.format("HIT_BY:\t%02x %02x %02x %02x\n",a0,a1,a2,a3));
-                        text.setText(sb.toString());
+                        sb.append("HIT:  ");
                         break;
 
                     case KILLED_BY:
-                        sb.append(String.format("KILLED_BY:\t%02x %02x %02x %02x\n",a0,a1,a2,a3));
+                        sb.append("KILL: ");
                         text.setText(sb.toString());
                         app.game.getTeam(a1).getPlayer(a2).kills += 1;
                         player.kill(5000);
+                        // TODO: Move this to server connection
+                        scoreboardAdapter.notifyDataSetChanged();
                         break;
-
                 }
+                sb.append(String.format("\t%02x %02x %02x %02x\n",a0,a1,a2,a3));
+                sb.setLength(0);
+                text.setText(sb.toString());
+
 
             }
 
@@ -264,7 +297,7 @@ public class MainGameActivity extends ActionBarActivity {
         updateLoadout();
 
         // Start cts UI updates
-        //startRepeatingUpdate();
+        startRepeatingUpdate();
 
 
 		
@@ -297,7 +330,6 @@ public class MainGameActivity extends ActionBarActivity {
         player.update();
         ammoBar.setMax(player.getGun().MAX_AMMO);
         ammoBar.setProgress(player.getGun().ammo);
-        //ammoText.setText(player.getGun().ammo + "/" + player.getGun().MAX_AMMO);
         ammoText.setText(""+player.getGun().ammo);
     }
 
@@ -357,9 +389,7 @@ public class MainGameActivity extends ActionBarActivity {
         @Override
         public void run(){
                 updateGameTime();
-                updateShield();
-                updateAmmo();
-                scoreboardAdapter.notifyDataSetChanged();
+                //scoreboardAdapter.notifyDataSetChanged();
                 updateHandler.postDelayed(updateStatusChecker, ui_update_interval);
             }
     };
@@ -414,7 +444,17 @@ public class MainGameActivity extends ActionBarActivity {
     void startRepeatingUpdate(){updateStatusChecker.run();}
     void stopRepeatingUpdate() {updateHandler.removeCallbacks(updateStatusChecker);}
 
-    public void sendPacket(int a0, int a1) { sendPacket((byte) a0,(byte) a1,(byte)0,(byte)0);}
+    public void sendPacket(SerialMessage m) {
+        sendPacket(m,(byte)0);
+    }
+    public void sendPacket(SerialMessage m, int a1) {
+        sendPacket(m.getId(),(byte) a1,
+                (byte)0,(byte)0);
+    }
+    public void sendPacket(int a0, int a1) {
+        sendPacket((byte) a0,(byte) a1,
+                (byte)0,(byte)0);
+    }
     public void sendPacket(byte a0, byte a1, byte a2, byte a3) {
         Intent intent = new Intent(SEND_DATA_INTENT);
         final byte[] data = {a0,a1,a2,a3};
