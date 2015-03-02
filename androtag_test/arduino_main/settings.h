@@ -8,8 +8,8 @@
 #define TIME_DEAD 5000 //ms
 
 /* DEBUGGING */
-#define VERBOSE_SERIAL
-#define DEBUG_SEND
-#define DEBUG_RECV
+//#define VERBOSE_SERIAL
+//#define DEBUG_SEND
+//#define DEBUG_RECV
 #define DEBUG 0
 #define dbmsg(msg) if (DEBUG) {Serial.print(msg);}

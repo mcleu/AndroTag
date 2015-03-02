@@ -20,11 +20,11 @@ extern unsigned shield;
 
 int dealDamage(int x, int teamsrc, int playersrc);
 // Allow direct writing of packet data to serial
-#ifdef VERBOSE_SERIAL
-#define writePacket(a,b,c,d) {Serial.print(a); Serial.print(' '); Serial.print(b); Serial.print(' '); Serial.print(c);Serial.print(' '); Serial.println(d);}
-#else
+//#ifdef VERBOSE_SERIAL
+//#define writePacket(a,b,c,d) {Serial.print(a); Serial.print(' '); Serial.print(b); Serial.print(' '); Serial.print(c);Serial.print(' '); Serial.println(d);}
+//#else
 void writePacket(int a, int b, int c, int d);
-#endif
+//#endif
 void setLoadout(int gunids[]);
 
 boolean isEnemy(byte tid);
