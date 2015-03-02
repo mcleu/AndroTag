@@ -5,12 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -30,7 +28,6 @@ import evans.dave.androtag.common.Player;
 import evans.dave.androtag.common.Scoring;
 import evans.dave.androtag.common.SerialMessage;
 import evans.dave.androtag.common.Team;
-import evans.dave.androtag.common.User;
 
 
 public class MainGameActivity extends ActionBarActivity {
@@ -39,7 +36,6 @@ public class MainGameActivity extends ActionBarActivity {
     private Handler updateHandler;
 
     AndrotagApplication app;
-    User user;
     Player player;
     
     TextView infoText;
@@ -53,11 +49,9 @@ public class MainGameActivity extends ActionBarActivity {
     ScoreboardLineAdapter scoreboardAdapter;
    	
    	ImageButton loadoutButtons[];
-   	TextView loadoutAmmos[];
    	FrameLayout loadoutFrames[];
 
     /* Sound management */
-    MediaPlayer gunAudioPlayer;
     SoundPool soundPool;
     int[] gunSoundIds = new int[4];
     int reloadSoundId;
@@ -182,164 +176,54 @@ public class MainGameActivity extends ActionBarActivity {
         /* Set up Seriallll OH BOY! */
         serialManager = new SerialManager(this) {
             @Override
-            void setState(int a0, int a1, int a2, int a3) {
+            void runPacket(int a0, int a1, int a2, int a3) {
+
+                switch (SerialMessage.getFromByte((byte) a0)){
+                    case SET_SHIELD:
+                        sb.append(String.format("SET_SHIELDS:\t%02x %02x %02x %02x\n",a0,a1,a2,a3));
+                        text.setText(sb.toString());
+                        player.shield = a1;
+                        updateShield();
+                        break;
+
+                    case FIRE_SUCCESS:
+                        if (a1!=0)
+                            if (player.getGun().firingSound != 0)
+                                soundPool.play(gunSoundIds[player.activeGun],1,1,1,0,1);
+                        break;
+
+                    case RELOAD_SUCCESS:
+                        if (a1 != 0)
+                            soundPool.play(reloadSoundId,1,1,1,0,1);
+                        break;
+
+                    case SET_ACTIVE:
+                        player.swap(a1);
+                        updateAmmo();
+                        updateLoadout();
+                        break;
+
+                    case SET_AMMO:
+                        player.getGun().ammo = a1;
+                        updateAmmo();
+                        break;
+
+                    case HIT_BY:
+                        sb.append(String.format("HIT_BY:\t%02x %02x %02x %02x\n",a0,a1,a2,a3));
+                        text.setText(sb.toString());
+                        break;
+
+                    case KILLED_BY:
+                        sb.append(String.format("KILLED_BY:\t%02x %02x %02x %02x\n",a0,a1,a2,a3));
+                        text.setText(sb.toString());
+                        app.game.getTeam(a1).getPlayer(a2).kills += 1;
+                        player.kill(5000);
+                        break;
+
+                }
 
             }
 
-            @Override
-            void setLives(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void setShield(int a0, int a1, int a2, int a3) {
-                sb.append(String.format("SET_SHIELDS:\t%02x %02x %02x %02x\n",a0,a1,a2,a3));
-                text.setText(sb.toString());
-                player.shield = a1;
-                updateShield();
-            }
-
-            @Override
-            void setRespawn(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void setPid(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void setTid(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void setGid(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void setColor(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void addEnemy(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void clearEnemies(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void setNumGuns(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void setGun0(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void setGun1(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void setGun2(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void setGun3(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void tryFire(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void fireSuccess(int a0, int a1, int a2, int a3) {
-
-                if (a1!=0)
-                    if (player.getGun().firingSound != 0)
-                        soundPool.play(gunSoundIds[player.activeGun],1,1,1,0,1);
-            }
-
-            @Override
-            void tryReload(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void reloadSuccess(int a0, int a1, int a2, int a3) {
-                if (a1 != 0)
-                    soundPool.play(reloadSoundId,1,1,1,0,1);
-            }
-
-            @Override
-            void setAmmo(int a0, int a1, int a2, int a3) {
-                player.getGun().ammo = a1;
-                updateAmmo();
-            }
-
-            @Override
-            void setActive(int a0, int a1, int a2, int a3) {
-                player.swap(a1);
-                updateAmmo();
-                updateLoadout();
-
-            }
-
-            @Override
-            void noLives(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void hitBy(int a0, int a1, int a2, int a3) {
-                sb.append(String.format("HIT_BY:\t%02x %02x %02x %02x\n",a0,a1,a2,a3));
-                text.setText(sb.toString());
-            }
-
-            @Override
-            void killedBy(int a0, int a1, int a2, int a3) {
-                sb.append(String.format("KILLED_BY:\t%02x %02x %02x %02x\n",a0,a1,a2,a3));
-                text.setText(sb.toString());
-                app.game.getTeam(a1).getPlayer(a2).kills += 1;
-                player.kill(5000);
-            }
-
-            @Override
-            void setStartTime(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void setEndTime(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void endGame(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void ack(int a0, int a1, int a2, int a3) {
-
-            }
-
-            @Override
-            void flush(int a0, int a1, int a2, int a3) {
-
-            }
         };
 
 
@@ -363,12 +247,12 @@ public class MainGameActivity extends ActionBarActivity {
         // TEAM 2
         // TEAM 1 Player 1
         // TEAM 1 Player 2 etc
-        ArrayList<Scoring> boardItems = new ArrayList<Scoring>();
+        ArrayList<Scoring> boardItems = new ArrayList<>();
         for (Team t: app.game.teams)
                 boardItems.add(t);
         for (Team t: app.game.teams)
                 for (GeneralPlayer p: t.players)
-                    if (p != player.NO_PLAYER)
+                    if (p != Player.NO_PLAYER)
                         boardItems.add(p);
 
         scoreboardAdapter = new ScoreboardLineAdapter(this, boardItems);
@@ -530,71 +414,6 @@ public class MainGameActivity extends ActionBarActivity {
     void startRepeatingUpdate(){updateStatusChecker.run();}
     void stopRepeatingUpdate() {updateHandler.removeCallbacks(updateStatusChecker);}
 
-    protected void playGunAudio(int res){
-        if (gunAudioPlayer != null){
-            gunAudioPlayer.reset();
-            gunAudioPlayer.release();
-        }
-        Log.v("GunAudio","Playing "+res);
-        gunAudioPlayer = MediaPlayer.create(this, res);
-        gunAudioPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                if (mp == gunAudioPlayer) {
-                    gunAudioPlayer.start();
-                }
-            }
-        });
-    }
-
-    private class ShieldAudioPlayer{
-
-        private int status;
-        private MediaPlayer mp;
-
-        public ShieldAudioPlayer(){
-            status = 0;
-        }
-        public void setState(int state) {
-            Log.v("ShieldAudioPlayer","State "+ state + " - " + status + "(" + (mp!=null) + ")");
-            if (state == 0){
-                // OFF
-                if (status != 0 && mp !=null) {
-                    mp.reset();
-                    mp.release();
-                }
-                status = 0;
-                return;
-
-            } else if (state == 1) {
-                // BEEPING
-                if (status != 1 && mp != null) {
-                    mp.reset();
-                    mp.release();
-                }
-                if (status != 1) {
-                    Log.v("ShieldAudioPlayer","IF1 "+ state + " - " + status + "(" + (mp!=null) + ")");
-                    mp = MediaPlayer.create(MainGameActivity.this,R.raw.shield_beep);
-                    Log.v("ShieldAudioPlayer","IF2 "+ state + " - " + status + "(" + (mp!=null) + ")");
-                    mp.start();
-                    mp.setLooping(true);
-                }
-                status = 1;
-                return;
-
-            } else if (state == 2) {
-                // REGENERATING
-                if (status == 1 && mp != null){
-                    mp.reset();
-                    mp.release();
-                    mp = MediaPlayer.create(MainGameActivity.this, R.raw.shield_regen);
-                    mp.start();
-                    status = 2;
-                }
-            }
-
-        }
-    }
     public void sendPacket(int a0, int a1) { sendPacket((byte) a0,(byte) a1,(byte)0,(byte)0);}
     public void sendPacket(byte a0, byte a1, byte a2, byte a3) {
         Intent intent = new Intent(SEND_DATA_INTENT);
